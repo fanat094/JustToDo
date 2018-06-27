@@ -7,7 +7,7 @@ import android.arch.persistence.room.InvalidationTracker;
 import android.arch.persistence.room.RoomDatabase;
 import android.support.annotation.NonNull;
 
-@Database(entities = {JustToDoStructureTable.class}, version = 1, exportSchema = false)
+@Database(entities = {JustToDoStructureTable.class}, version = 2, exportSchema = false)
 public abstract class JustToDoDatabase extends RoomDatabase {
 
     public abstract JustToDoDao justToDoDao();

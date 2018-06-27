@@ -53,6 +53,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddTaskView{
     public void btnaddtaskonclick(View view) {
         Toast.makeText(this, "You win!", LENGTH_SHORT).show();
         addTaskPresenter.addTaskProcedure();
+        //finish();
     }
 
     @Override

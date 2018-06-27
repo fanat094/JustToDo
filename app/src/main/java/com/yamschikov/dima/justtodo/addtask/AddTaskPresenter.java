@@ -39,8 +39,14 @@ public class AddTaskPresenter {
         @Override
         protected Boolean doInBackground(Void... voids) {
 
-            JustToDoStructureTable task = new JustToDoStructureTable(2, 1, "title1", "content1"
-            ,"date1", "category1", "user1");
+            JustToDoStructureTable task = new JustToDoStructureTable();
+
+            task.task_title = "task3";
+            task.task_category = "task3";
+            task.task_content = "task3";
+            task.task_date = "task3";
+            task.task_user_id = "task3";
+
             justToDoDao.insert(task);
             KLog.e("New Task", task.task_title);
 
