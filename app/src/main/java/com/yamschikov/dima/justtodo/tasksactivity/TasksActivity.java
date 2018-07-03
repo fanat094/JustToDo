@@ -12,23 +12,48 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.socks.library.KLog;
 import com.yamschikov.dima.justtodo.R;
 import com.yamschikov.dima.justtodo.addtask.AddTaskActivity;
+import com.yamschikov.dima.justtodo.prefsafe.PrefManager;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    TextView mIdUserName;
+    TextView mIdUserEmail;
+    CircleImageView mIdUserPic;
+
+    @BindView(R.id.toolbarTask)
+    Toolbar mToolbarTask;
+    @BindView(R.id.fabTask)
+    FloatingActionButton mFabTask;
+    @BindView(R.id.drawerTask)
+    DrawerLayout mDrawerTask;
+    @BindView(R.id.navViewTask)
+    NavigationView mNavViewTask;
+
+    View headerView;
+    PrefManager prefManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        ButterKnife.bind(this);
+
+        setSupportActionBar(mToolbarTask);
+
+        mFabTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent welcomeintent = new Intent(TasksActivity.this, AddTaskActivity.class);
@@ -36,21 +61,28 @@ public class TasksActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, mDrawerTask, mToolbarTask, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerTask.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavViewTask.setNavigationItemSelectedListener(this);
+
+        headerView = mNavViewTask.getHeaderView(0);
+        mIdUserName = (TextView) headerView.findViewById(R.id.idUserName);
+        mIdUserEmail = (TextView) headerView.findViewById(R.id.idUserEmail);
+        mIdUserPic = (CircleImageView) headerView.findViewById(R.id.idUserPic);
+        //mIdUserName.setText("Your Text Here");
+
+        prefManager = new PrefManager(this);
+
+        userr();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (mDrawerTask.isDrawerOpen(GravityCompat.START)) {
+            mDrawerTask.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -96,8 +128,36 @@ public class TasksActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawerTask.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void userr() {
+
+        Intent intent = getIntent();
+        Bundle bd = intent.getExtras();
+        if (bd != null) {
+            int intlabel = bd.getInt("label");
+
+            if (intlabel == 1) {
+
+                KLog.e("IntLanel", intlabel);
+                String getName = (String) bd.get("firebaseusername");
+                mIdUserName.setText(getName);
+                String getEmail = (String) bd.get("firebaseuseremail");
+                mIdUserEmail.setText(getEmail);
+                String getPic = (String) bd.get("firebaseuserpic");
+                Glide.with(this)
+                        .load(getPic)
+                        .into(mIdUserPic);
+            } else {
+                KLog.e("NO Null");
+                mIdUserName.setText(prefManager.getFirstUserName());
+                mIdUserEmail.setText(prefManager.getFirstUserEmail());
+                Glide.with(this)
+                        .load(prefManager.getFirstUserPic())
+                        .into(mIdUserPic);
+            }
+        }
     }
 }

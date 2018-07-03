@@ -30,4 +30,9 @@
     <string name="action_add_task_menu_item">AddTaskMenuItem</string>
     <string name="title_activity_add">AddActivity</string>
     <string name="title_activity_add_task">AddTaskActivity</string>
+
+
+
+    <string name="facebook_app_id">2023020101342644</string>
+    <string name="fb_login_protocol_scheme">fb2023020101342644</string>
 </resources>

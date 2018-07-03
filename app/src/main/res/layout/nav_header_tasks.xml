@@ -12,27 +12,30 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/idUserPic"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:contentDescription="@string/nav_header_desc"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:civ_border_color="@color/colorWhite"
+        app:civ_border_width="2dp"
+        android:src="@drawable/facebook_welcome"/>
 
     <TextView
+        android:id="@+id/idUserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:textColor="@color/colorBlack"
         android:text="Dima Yamscikov"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorBlack" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/idUserEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="yamschikovdima@gmail.com"
-        android:textColor="@color/colorBlack"/>
+        android:textColor="@color/colorBlack" />
 
 </LinearLayout>
