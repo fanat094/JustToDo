@@ -20,6 +20,8 @@ public class PrefManager {
     private static final String PREF_USER_EMAIL = "prefuseremail";
     private static final String PREF_USER_PIC = "prefuserpic";
 
+    private static final String PREF_CHECKED_CATEGORY = "prefcheckedcategory";
+
     public PrefManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
@@ -37,7 +39,7 @@ public class PrefManager {
 
     //prefuser
 
-    public void setFirstUser(String prefUserName, String prefUserEmail, String prefUserPic ) {
+    public void setFirstUser(String prefUserName, String prefUserEmail, String prefUserPic) {
         editor.putString(PREF_USER_NAME, prefUserName);
         editor.putString(PREF_USER_EMAIL, prefUserEmail);
         editor.putString(PREF_USER_PIC, prefUserPic);
@@ -54,5 +56,15 @@ public class PrefManager {
 
     public String getFirstUserPic() {
         return pref.getString(PREF_USER_PIC, "");
+    }
+
+    //
+    public void setCheckedCategory(String checkedCategory) {
+        editor.putString(PREF_CHECKED_CATEGORY, checkedCategory);
+        editor.commit();
+    }
+
+    public String getCheckedCategory() {
+        return pref.getString(PREF_CHECKED_CATEGORY, "");
     }
 }

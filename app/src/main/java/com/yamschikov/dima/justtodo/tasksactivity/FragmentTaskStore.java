@@ -1,0 +1,35 @@
+package com.yamschikov.dima.justtodo.tasksactivity;
+
+import android.arch.lifecycle.ViewModelProviders;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.yamschikov.dima.justtodo.R;
+
+public class FragmentTaskStore extends Fragment {
+
+    private FragmentTaskStoreViewModel mViewModel;
+
+    public static FragmentTaskStore newInstance() {
+        return new FragmentTaskStore();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_task_store_fragment, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel = ViewModelProviders.of(this).get(FragmentTaskStoreViewModel.class);
+        // TODO: Use the ViewModel
+    }
+
+}

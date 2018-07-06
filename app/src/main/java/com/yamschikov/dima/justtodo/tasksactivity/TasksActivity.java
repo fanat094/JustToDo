@@ -20,13 +20,15 @@ import com.yamschikov.dima.justtodo.R;
 import com.yamschikov.dima.justtodo.addtask.AddTaskActivity;
 import com.yamschikov.dima.justtodo.prefsafe.PrefManager;
 
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class TasksActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class TasksActivity extends AppCompatActivity {
 
     TextView mIdUserName;
     TextView mIdUserEmail;
@@ -43,6 +45,8 @@ public class TasksActivity extends AppCompatActivity
 
     View headerView;
     PrefManager prefManager;
+
+    NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,17 +70,18 @@ public class TasksActivity extends AppCompatActivity
         mDrawerTask.addDrawerListener(toggle);
         toggle.syncState();
 
-        mNavViewTask.setNavigationItemSelectedListener(this);
-
         headerView = mNavViewTask.getHeaderView(0);
         mIdUserName = (TextView) headerView.findViewById(R.id.idUserName);
         mIdUserEmail = (TextView) headerView.findViewById(R.id.idUserEmail);
         mIdUserPic = (CircleImageView) headerView.findViewById(R.id.idUserPic);
-        //mIdUserName.setText("Your Text Here");
 
         prefManager = new PrefManager(this);
 
         userr();
+
+        navController = Navigation.findNavController(this, R.id.my_nav_host_fragment);
+        NavigationUI.setupWithNavController(mNavViewTask, navController);
+        NavigationUI.setupActionBarWithNavController(this, navController, mDrawerTask);
     }
 
     @Override
@@ -95,41 +100,15 @@ public class TasksActivity extends AppCompatActivity
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerTask.openDrawer(GravityCompat.START);
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        mDrawerTask.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     private void userr() {

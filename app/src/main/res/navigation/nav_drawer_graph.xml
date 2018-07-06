@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/fragmentTaskToday">
+
+    <fragment
+        android:id="@+id/fragmentTaskToday"
+        android:name="com.yamschikov.dima.justtodo.tasksactivity.FragmentTaskToday"
+        android:label="@string/today_task_fragment"
+        tools:layout="@layout/fragment_fragment_task_today" />
+    <fragment
+        android:id="@+id/blankFragment"
+        android:name="com.yamschikov.dima.justtodo.tasksactivity.FragmentTaskHome"
+        android:label="@string/home_task_fragment"
+        tools:layout="@layout/fragment_task_home" />
+    <fragment
+        android:id="@+id/fragmentTaskWork"
+        android:name="com.yamschikov.dima.justtodo.tasksactivity.FragmentTaskWork"
+        android:label="@string/work_task_fragment"
+        tools:layout="@layout/fragment_task_work_fragment" />
+    <fragment
+        android:id="@+id/fragmentTaskPersonal"
+        android:name="com.yamschikov.dima.justtodo.tasksactivity.FragmentTaskPersonal"
+        android:label="@string/personal_task_fragment"
+        tools:layout="@layout/fragment_task_personal_fragment" />
+    <fragment
+        android:id="@+id/fragmentTaskStore"
+        android:name="com.yamschikov.dima.justtodo.tasksactivity.FragmentTaskStore"
+        android:label="@string/store_task_fragment"
+        tools:layout="@layout/fragment_task_store_fragment" />
+</navigation>

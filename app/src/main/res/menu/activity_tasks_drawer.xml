@@ -5,27 +5,27 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/fragmentTaskToday"
             android:icon="@drawable/ic_today_blue_24dp"
             android:title="Today"
             android:iconTint="@color/colorPrimary"/>
 
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/blankFragment"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="Home" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/fragmentTaskWork"
             android:icon="@drawable/ic_work_blue_24dp"
             android:title="Work" />
 
         <item
-            android:id="@+id/nav_manageq"
+            android:id="@+id/fragmentTaskPersonal"
             android:icon="@drawable/ic_person_black_24dp"
             android:title="Personal" />
 
         <item
-            android:id="@+id/nav_managew"
+            android:id="@+id/fragmentTaskStore"
             android:icon="@drawable/ic_store_black_24dp"
             android:title="Store" />
 
