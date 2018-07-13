@@ -49,8 +49,8 @@ public class FragmentTaskToday extends Fragment {
         protected Boolean doInBackground(Void... voids) {
 
             List<JustToDoStructureTable> employeesLiveData = justToDoDao.getAll();
-            String ggg = employeesLiveData.get(0).task_title;
-            KLog.e("dffffffff", ggg);
+//            String ggg = employeesLiveData.get(0).task_title;
+ //           KLog.e("dffffffff", ggg);
 
             return true;
         }

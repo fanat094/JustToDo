@@ -53,5 +53,8 @@
     </string-array>
 
     <string name="action_filter">OK</string>
+    <string name="snackbartaskisempty">Task is empty!</string>
+    <string name="snackbattaskwelldone">Well done!</string>
+    <string name="messageremovedfromtask">removed from task!</string>
 
 </resources>

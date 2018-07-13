@@ -21,6 +21,8 @@
         android:background="@color/colorWhite"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_tasks"
-        app:menu="@menu/activity_tasks_drawer" />
+        app:menu="@menu/activity_tasks_drawer"
+        app:itemIconTint="@color/colorPrimary"
+        app:itemTextColor="@color/colorPrimary"/>
 
 </android.support.v4.widget.DrawerLayout>

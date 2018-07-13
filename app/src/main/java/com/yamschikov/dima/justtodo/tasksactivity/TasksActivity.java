@@ -13,12 +13,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.socks.library.KLog;
+import com.yamschikov.dima.justtodo.BaseApplication;
 import com.yamschikov.dima.justtodo.R;
 import com.yamschikov.dima.justtodo.addtask.AddTaskActivity;
+import com.yamschikov.dima.justtodo.di.SharedPreferencesManager;
 import com.yamschikov.dima.justtodo.prefsafe.PrefManager;
+
+import javax.inject.Inject;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -44,9 +49,16 @@ public class TasksActivity extends AppCompatActivity {
     NavigationView mNavViewTask;
 
     View headerView;
-    PrefManager prefManager;
+    //PrefManager prefManager;
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
 
     NavController navController;
+
+    public static final String EXTRA_FIREBASEUSERNAME = "firebaseusername";
+    public static final String EXTRA_FIREBASEUSEREMAIL = "firebaseuseremail";
+    public static final String EXTRA_FIREBASEUSERPIC = "firebaseuserpic";
+    public static final String EXTRA_FIREBASEUSERLABEL = "firebaseuserlabel";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +66,7 @@ public class TasksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tasks);
 
         ButterKnife.bind(this);
+        BaseApplication.getAppComponent().inject(this);
 
         setSupportActionBar(mToolbarTask);
 
@@ -75,9 +88,9 @@ public class TasksActivity extends AppCompatActivity {
         mIdUserEmail = (TextView) headerView.findViewById(R.id.idUserEmail);
         mIdUserPic = (CircleImageView) headerView.findViewById(R.id.idUserPic);
 
-        prefManager = new PrefManager(this);
+        //prefManager = new PrefManager(this);
 
-        userr();
+        userInfo();
 
         navController = Navigation.findNavController(this, R.id.my_nav_host_fragment);
         NavigationUI.setupWithNavController(mNavViewTask, navController);
@@ -103,38 +116,36 @@ public class TasksActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerTask.openDrawer(GravityCompat.START);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+
+        return NavigationUI.onNavDestinationSelected(item,
+                Navigation.findNavController(this, R.id.my_nav_host_fragment)) ||
+                super.onOptionsItemSelected(item);
     }
 
-    private void userr() {
+    private void userInfo() {
 
         Intent intent = getIntent();
         Bundle bd = intent.getExtras();
         if (bd != null) {
-            int intlabel = bd.getInt("label");
+            int intlabel = bd.getInt(EXTRA_FIREBASEUSERLABEL);
 
             if (intlabel == 1) {
 
                 KLog.e("IntLanel", intlabel);
-                String getName = (String) bd.get("firebaseusername");
+                String getName = (String) bd.get(EXTRA_FIREBASEUSERNAME);
                 mIdUserName.setText(getName);
-                String getEmail = (String) bd.get("firebaseuseremail");
+                String getEmail = (String) bd.get(EXTRA_FIREBASEUSEREMAIL);
                 mIdUserEmail.setText(getEmail);
-                String getPic = (String) bd.get("firebaseuserpic");
+                String getPic = (String) bd.get(EXTRA_FIREBASEUSERPIC);
                 Glide.with(this)
                         .load(getPic)
                         .into(mIdUserPic);
             } else {
                 KLog.e("NO Null");
-                mIdUserName.setText(prefManager.getFirstUserName());
-                mIdUserEmail.setText(prefManager.getFirstUserEmail());
+                mIdUserName.setText(sharedPreferencesManager.getFirstUserName());
+                mIdUserEmail.setText(sharedPreferencesManager.getFirstUserEmail());
                 Glide.with(this)
-                        .load(prefManager.getFirstUserPic())
+                        .load(sharedPreferencesManager.getFirstUserPic())
                         .into(mIdUserPic);
             }
         }

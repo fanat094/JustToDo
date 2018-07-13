@@ -2,22 +2,16 @@ package com.yamschikov.dima.justtodo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -26,36 +20,42 @@ import com.facebook.login.LoginResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.socks.library.KLog;
+import com.yamschikov.dima.justtodo.di.SharedPreferencesManager;
 import com.yamschikov.dima.justtodo.faceboook_auth.FacebookView;
 import com.yamschikov.dima.justtodo.faceboook_auth.FireBaseFacebookPresenter;
-import com.yamschikov.dima.justtodo.prefsafe.PrefManager;
 import com.yamschikov.dima.justtodo.tasksactivity.TasksActivity;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
 public class WelcomeActivity extends AppCompatActivity implements FacebookView {
 
-    private MyViewPagerAdapter myViewPagerAdapter;
+    private SliderPagerAdapter sliderPagerAdapter;
     private int[] layouts;
 
     @BindView(R.id.view_pager_welcome)
     ViewPager mViewPageWelcome;
     @BindView(R.id.btnSignEmpty)
     Button mBtnSignEmpty;
-    private PrefManager prefManager;
+    //private PrefManager prefManager;
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
 
     private CallbackManager mCallbackManager;
     private static final String TAG = "FacebookAuthentication";
 
     private FirebaseAuth mAuth;
     FireBaseFacebookPresenter fireBaseFacebookPresenter;
+
+    public static final String EXTRA_FIREBASEUSERNAME = "firebaseusername";
+    public static final String EXTRA_FIREBASEUSEREMAIL = "firebaseuseremail";
+    public static final String EXTRA_FIREBASEUSERPIC = "firebaseuserpic";
+    public static final String EXTRA_FIREBASEUSERLABEL = "firebaseuserlabel";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,19 +64,20 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView {
         mViewPageWelcome = (ViewPager) findViewById(R.id.view_pager_welcome);
 
         ButterKnife.bind(this);
+        BaseApplication.getAppComponent().inject(this);
 
         layouts = new int[]{
                 R.layout.welcome_slide1,
                 R.layout.welcome_slide2};
 
-        myViewPagerAdapter = new MyViewPagerAdapter();
-        mViewPageWelcome.setAdapter(myViewPagerAdapter);
+        sliderPagerAdapter = new SliderPagerAdapter();
+        mViewPageWelcome.setAdapter(sliderPagerAdapter);
         mViewPageWelcome.addOnPageChangeListener(viewPagerPageChangeListener);
 
         // Checking for first time launch - before calling setContentView()
-        prefManager = new PrefManager(this);
-        if (prefManager.isFirstTimeLaunch()) {
-            KLog.e("launchHomeScreen", prefManager.isFirstTimeLaunch());
+        //prefManager = new PrefManager(this);
+        if (sharedPreferencesManager.isFirstTimeLaunch()) {
+            KLog.e("launchHomeScreen", sharedPreferencesManager.isFirstTimeLaunch());
 
         }
         else {
@@ -94,7 +95,6 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView {
 
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
-
     }
 
     @OnClick({R.id.btnSignGoogle, R.id.btnSignFacebook, R.id.btnSignEmpty})
@@ -109,7 +109,7 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView {
                 //launchHomeScreen();
 
             case R.id.btnSignFacebook:
-                prefManager.setFirstTimeLaunch(false);
+                sharedPreferencesManager.setFirstTimeLaunch(false);
                 LoginManager.getInstance().logInWithReadPermissions(WelcomeActivity.this,
                         Arrays.asList("email", "public_profile"));
                 LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -132,8 +132,7 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView {
                 break;
         }
     }
-
-
+    
     private int getItem(int i) {
         return mViewPageWelcome.getCurrentItem() + i;
     }
@@ -162,10 +161,10 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView {
         }
     };
 
-    public class MyViewPagerAdapter extends PagerAdapter {
+    public class SliderPagerAdapter extends PagerAdapter {
         private LayoutInflater layoutInflater;
 
-        public MyViewPagerAdapter() {
+        public SliderPagerAdapter() {
         }
 
         @Override
@@ -197,7 +196,7 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView {
     }
 
     private void launchHomeScreen() {
-        prefManager.setFirstTimeLaunch(false);
+        sharedPreferencesManager.setFirstTimeLaunch(false);
         startActivity(new Intent(WelcomeActivity.this, TasksActivity.class));
         finish();
     }
@@ -243,15 +242,15 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView {
             mUserIdPicTextView = String.valueOf(user.getPhotoUrl());
 
             Intent intent = new Intent(this, TasksActivity.class);
-            intent.putExtra("firebaseusername", mUserIdNameTextView);
-            intent.putExtra("firebaseuseremail", mUserIdEmailTextView);
-            intent.putExtra("firebaseuserpic", mUserIdPicTextView);
-            intent.putExtra("label", 1);
+            intent.putExtra(EXTRA_FIREBASEUSERNAME, mUserIdNameTextView);
+            intent.putExtra(EXTRA_FIREBASEUSEREMAIL, mUserIdEmailTextView);
+            intent.putExtra(EXTRA_FIREBASEUSERPIC, mUserIdPicTextView);
+            intent.putExtra(EXTRA_FIREBASEUSERLABEL, 1);
             startActivity(intent);
             finish();
 
             //prefUser
-            prefManager.setFirstUser(mUserIdNameTextView, mUserIdEmailTextView, mUserIdPicTextView);
+            sharedPreferencesManager.setFirstUser(mUserIdNameTextView, mUserIdEmailTextView, mUserIdPicTextView);
             KLog.e("refManager.setFirstUser", mUserIdEmailTextView);
 
             //launchHomeScreen();
@@ -265,5 +264,4 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView {
             mFacebookBtn.setVisibility(View.VISIBLE);
             sign_out_and_disconnect.setVisibility(View.GONE);*/
     }
-
 }

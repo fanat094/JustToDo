@@ -21,6 +21,7 @@ public class PrefManager {
     private static final String PREF_USER_PIC = "prefuserpic";
 
     private static final String PREF_CHECKED_CATEGORY = "prefcheckedcategory";
+    private static final String PREF_CHECKED_DATE = "prefcheckeddate";
 
     public PrefManager(Context context) {
         this._context = context;
@@ -58,7 +59,7 @@ public class PrefManager {
         return pref.getString(PREF_USER_PIC, "");
     }
 
-    //
+    //add task param
     public void setCheckedCategory(String checkedCategory) {
         editor.putString(PREF_CHECKED_CATEGORY, checkedCategory);
         editor.commit();
@@ -66,5 +67,14 @@ public class PrefManager {
 
     public String getCheckedCategory() {
         return pref.getString(PREF_CHECKED_CATEGORY, "");
+    }
+
+    public String getCheckedDate() {
+        return pref.getString(PREF_CHECKED_DATE, "");
+    }
+
+    public void setCheckedDate(String checkedDate) {
+        editor.putString(PREF_CHECKED_DATE, checkedDate);
+        editor.commit();
     }
 }

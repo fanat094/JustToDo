@@ -8,10 +8,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher_just_todo"
+        android:icon="@mipmap/ic_launcher_just_to_do"
         android:name=".BaseApplication"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_just_todo"
+        android:roundIcon="@mipmap/ic_launcher_just_to_do"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
