@@ -50,8 +50,9 @@ public class FireBaseFacebookPresenter {
 
     public void facebookSignOut(){
 
+        mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
         LoginManager.getInstance().logOut();
-        facebookView.updateUser(null);
+        //facebookView.updateUser(null);
     }
 }

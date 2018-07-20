@@ -35,6 +35,8 @@
     <string name="facebook_app_id">2023020101342644</string>
     <string name="fb_login_protocol_scheme">fb2023020101342644</string>
 
+    <string name="firebase_web_client_id">312575106278-08ootp0itkl3fsnr1738mmjj0kpano83.apps.googleusercontent.com</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="today_task_fragment">Today</string>
     <string name="home_task_fragment">Home</string>
@@ -56,5 +58,10 @@
     <string name="snackbartaskisempty">Task is empty!</string>
     <string name="snackbattaskwelldone">Well done!</string>
     <string name="messageremovedfromtask">removed from task!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="empty_just_to_do_user">Just To Do</string>
+    <string name="empty_user">Just User</string>
 
 </resources>

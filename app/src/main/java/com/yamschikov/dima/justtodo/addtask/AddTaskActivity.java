@@ -122,27 +122,27 @@ public class AddTaskActivity extends AppCompatActivity implements CustomDatePick
                             case 0:
                                 btnLabel(0, filter_items[0]);
                                 //prefManager.setCheckedCategory(filter_items[0]);
-                                sharedPreferencesManager.setCheckedDate(filter_items[0]);
+                                sharedPreferencesManager.setCheckedCategory(filter_items[0]);
                                 break;
                             case 1:
                                 btnLabel(1, filter_items[1]);
                                 //prefManager.setCheckedCategory(filter_items[1]);
-                                sharedPreferencesManager.setCheckedDate(filter_items[1]);
+                                sharedPreferencesManager.setCheckedCategory(filter_items[1]);
                                 break;
                             case 2:
                                 btnLabel(2, filter_items[2]);
                                 //prefManager.setCheckedCategory(filter_items[2]);
-                                sharedPreferencesManager.setCheckedDate(filter_items[2]);
+                                sharedPreferencesManager.setCheckedCategory(filter_items[2]);
                                 break;
                             case 3:
                                 btnLabel(3, filter_items[3]);
                                 //prefManager.setCheckedCategory(filter_items[3]);
-                                sharedPreferencesManager.setCheckedDate(filter_items[3]);
+                                sharedPreferencesManager.setCheckedCategory(filter_items[3]);
                                 break;
                             case 4:
                                 btnLabel(4, filter_items[4]);
                                 //prefManager.setCheckedCategory(filter_items[4]);
-                                sharedPreferencesManager.setCheckedDate(filter_items[4]);
+                                sharedPreferencesManager.setCheckedCategory(filter_items[4]);
                                 break;
                         }
                     }

@@ -19,6 +19,8 @@ public class SharedPreferencesManager {
     private static final String PREF_CHECKED_CATEGORY = "prefcheckedcategory";
     private static final String PREF_CHECKED_DATE = "prefcheckeddate";
 
+    private static final String PREF_CHECK_SIGNOUT = "prefchecksignout";
+
 
     @Inject
     public SharedPreferencesManager(SharedPreferences mSharedPreferences) {
@@ -67,5 +69,13 @@ public class SharedPreferencesManager {
 
     public void setCheckedDate(String checkedDate) {
         mSharedPreferences.edit().putString(PREF_CHECKED_DATE, checkedDate).apply();
+    }
+
+    public int getCheckSignOut() {
+        return mSharedPreferences.getInt(PREF_CHECK_SIGNOUT, 1001);
+    }
+
+    public void setCheckSignOut(int checkSignOut) {
+        mSharedPreferences.edit().putInt(PREF_CHECK_SIGNOUT, checkSignOut).apply();
     }
 }

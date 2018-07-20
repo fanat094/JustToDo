@@ -2,7 +2,9 @@ package com.yamschikov.dima.justtodo.tasksactivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.socks.library.KLog;
 import com.yamschikov.dima.justtodo.BaseApplication;
 import com.yamschikov.dima.justtodo.R;
@@ -26,12 +29,12 @@ import com.yamschikov.dima.justtodo.prefsafe.PrefManager;
 import javax.inject.Inject;
 
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-
 
 public class TasksActivity extends AppCompatActivity {
 
@@ -59,6 +62,10 @@ public class TasksActivity extends AppCompatActivity {
     public static final String EXTRA_FIREBASEUSEREMAIL = "firebaseuseremail";
     public static final String EXTRA_FIREBASEUSERPIC = "firebaseuserpic";
     public static final String EXTRA_FIREBASEUSERLABEL = "firebaseuserlabel";
+
+    public static final int SIGN_OUT_CODE = 1001;
+    public static final int SIGN_OUT_CODE_EMPTY = 1000;
+    public static final int SIGN_OUT_CODE_GOOGLE = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,12 +102,33 @@ public class TasksActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.my_nav_host_fragment);
         NavigationUI.setupWithNavController(mNavViewTask, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, mDrawerTask);
+
+        navController.addOnNavigatedListener(new NavController.OnNavigatedListener() {
+            @Override
+            public void onNavigated(@NonNull NavController controller, @NonNull NavDestination destination) {
+
+                switch (destination.getId()) {
+
+                    case R.id.navigation3:
+
+                        KLog.e("destinationwelcomeActivity");
+                        sharedPreferencesManager.setFirstTimeLaunch(true);
+
+                        int codecheck = sharedPreferencesManager.getCheckSignOut();
+
+                        sharedPreferencesManager.setCheckSignOut(codecheck);
+                        finish();
+                        break;
+                }
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         if (mDrawerTask.isDrawerOpen(GravityCompat.START)) {
             mDrawerTask.closeDrawer(GravityCompat.START);
+            finish();
         } else {
             super.onBackPressed();
         }
@@ -112,7 +140,6 @@ public class TasksActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.tasks, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -140,14 +167,43 @@ public class TasksActivity extends AppCompatActivity {
                 Glide.with(this)
                         .load(getPic)
                         .into(mIdUserPic);
-            } else {
-                KLog.e("NO Null");
-                mIdUserName.setText(sharedPreferencesManager.getFirstUserName());
-                mIdUserEmail.setText(sharedPreferencesManager.getFirstUserEmail());
+            }
+
+            if (intlabel == 2) {
+
+                mIdUserName.setText(getResources().getString(R.string.empty_just_to_do_user));
+                mIdUserEmail.setText(getResources().getString(R.string.empty_user));
                 Glide.with(this)
-                        .load(sharedPreferencesManager.getFirstUserPic())
+                        .load(getResources().getDrawable(R.drawable.book))
                         .into(mIdUserPic);
+            } else {
+
+                if (sharedPreferencesManager.getCheckSignOut() == SIGN_OUT_CODE_EMPTY) {
+
+                    KLog.e("NO Null_SIGN_OUT_CODE_EMPTY");
+                    mIdUserName.setText(sharedPreferencesManager.getFirstUserName());
+                    mIdUserEmail.setText(sharedPreferencesManager.getFirstUserEmail());
+                    Glide.with(this)
+                            .load(getResources().getDrawable(R.drawable.book))
+                            .into(mIdUserPic);
+                } else {
+
+                    KLog.e("NO Null");
+                    mIdUserName.setText(sharedPreferencesManager.getFirstUserName());
+                    mIdUserEmail.setText(sharedPreferencesManager.getFirstUserEmail());
+                    Glide.with(this)
+                            .load(sharedPreferencesManager.getFirstUserPic())
+                            .into(mIdUserPic);
+                }
             }
         }
     }
+
+   /* @Override
+    public void onStop() {
+        super.onStop();
+        sharedPreferencesManager.setFirstTimeLaunch(true);
+        finish();
+        KLog.e("NO onStop");
+    }*/
 }

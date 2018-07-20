@@ -144,6 +144,34 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="navigation3">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="260" />
+                            <option name="y" value="20" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="welcomeActivity">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="20" />
+                                      <option name="y" value="20" />
+                                    </Point>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                 </map>
               </option>
             </LayoutPositions>

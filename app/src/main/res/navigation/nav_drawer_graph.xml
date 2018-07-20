@@ -23,10 +23,19 @@
         android:id="@+id/fragmentTaskPersonal"
         android:name="com.yamschikov.dima.justtodo.tasksactivity.FragmentTaskPersonal"
         android:label="@string/personal_task_fragment"
-        tools:layout="@layout/fragment_task_personal_fragment" />
+        tools:layout="@layout/fragment_task_personal_fragment" >
+    </fragment>
     <fragment
         android:id="@+id/fragmentTaskStore"
         android:name="com.yamschikov.dima.justtodo.tasksactivity.FragmentTaskStore"
         android:label="@string/store_task_fragment"
         tools:layout="@layout/fragment_task_store_fragment" />
+    <navigation android:id="@+id/navigation3"
+        app:startDestination="@id/welcomeActivity">
+        <activity
+            android:id="@+id/welcomeActivity"
+            android:name="com.yamschikov.dima.justtodo.WelcomeActivity"
+            android:label="activity_welcome"
+            tools:layout="@layout/activity_welcome" />
+    </navigation>
 </navigation>
