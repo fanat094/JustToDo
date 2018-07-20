@@ -351,7 +351,7 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
 
         }
 
-        KLog.d("Recordered in firebase");
+        //KLog.d("Recordered in firebase");
 
         Toast.makeText(this, "Email logged",
                 Toast.LENGTH_LONG).show();
