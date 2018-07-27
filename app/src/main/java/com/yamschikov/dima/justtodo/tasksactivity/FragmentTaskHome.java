@@ -90,7 +90,6 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
             public void onChanged(@Nullable List<JustToDoStructureTable> justToDoStructureTables) {
 
                 if (justToDoStructureTables.size() != 0) {
-                    KLog.e("directors", justToDoStructureTables.get(0).task_title);
 
                     justToDoStructureTablesList = justToDoStructureTables;
                     mJustTaskAdapter = new JustTaskAdapter(justToDoStructureTablesList);
@@ -101,7 +100,6 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
                     mEmptyView.setVisibility(View.GONE);
                     mEmptyPic.setVisibility(View.GONE);
                 } else {
-                    KLog.e("directors NO");
 
                     mTaskListRv.setVisibility(View.GONE);
                     mEmptyView.setVisibility(View.VISIBLE);
