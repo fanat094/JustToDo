@@ -11,15 +11,28 @@
         android:layout_width="0dp"
         android:layout_height="450dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnSignGoogle"
+        app:layout_constraintBottom_toTopOf="@+id/indicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <me.relex.circleindicator.CircleIndicator
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnSignGoogle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/btnSignGoogle"
+        style="@style/ButtonBorder.Accent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
@@ -29,7 +42,6 @@
         android:textAllCaps="false"
         android:textColor="@color/colorWhite"
         android:textSize="14sp"
-        style="@style/ButtonBorder.Accent"
         app:layout_constraintBottom_toTopOf="@+id/btnSignFacebook"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnSignFacebook"
@@ -39,6 +51,7 @@
 
     <Button
         android:id="@+id/btnSignFacebook"
+        style="@style/ButtonBorder.Accent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -49,7 +62,6 @@
         android:text="Continue with Facebook"
         android:textAllCaps="false"
         android:textColor="@color/colorWhite"
-        style="@style/ButtonBorder.Accent"
         app:layout_constraintBottom_toTopOf="@+id/btnSignEmpty"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnSignGoogle"

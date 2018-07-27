@@ -39,15 +39,14 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="today_task_fragment">Today</string>
+    <string name="alltasks_task_fragment">All Tasks</string>
     <string name="home_task_fragment">Home</string>
     <string name="work_task_fragment">Work</string>
     <string name="personal_task_fragment">Personal</string>
     <string name="store_task_fragment">Store</string>
 
-
     <!-- Category Items Alert -->
     <string-array name="category_items">
-        <item>@string/today_task_fragment</item>
         <item>@string/home_task_fragment</item>
         <item>@string/work_task_fragment</item>
         <item>@string/personal_task_fragment</item>

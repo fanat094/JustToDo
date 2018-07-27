@@ -1,11 +1,11 @@
 package com.yamschikov.dima.justtodo.tasksactivity;
 
-
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -24,14 +24,11 @@ import com.socks.library.KLog;
 import com.yamschikov.dima.justtodo.BaseApplication;
 import com.yamschikov.dima.justtodo.R;
 import com.yamschikov.dima.justtodo.di.SharedPreferencesManager;
-import com.yamschikov.dima.justtodo.room_db.JustToDoDao;
 import com.yamschikov.dima.justtodo.room_db.JustToDoStructureTable;
 import com.yamschikov.dima.justtodo.tasksactivity.adapters.JustTaskAdapter;
 import com.yamschikov.dima.justtodo.tasksactivity.adapters.RecyclerItemTouchHelper;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,16 +36,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class FragmentTaskToday extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+public class FragmentTaskAllTasks extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
-    @Inject
-    JustToDoDao justToDoDao;
-
-    private BlankViewModel mTaskTodayViewModel;
-    LiveData<List<JustToDoStructureTable>> mTaskTodayData;
+    private BlankViewModel mTaskWorkViewModel;
+    LiveData<List<JustToDoStructureTable>> mTaskWorkData;
 
     @Inject
     SharedPreferencesManager sharedPreferencesManager;
@@ -69,27 +60,21 @@ public class FragmentTaskToday extends Fragment implements RecyclerItemTouchHelp
 
     List<JustToDoStructureTable> justToDoStructureTablesList;
 
-
-    public FragmentTaskToday() {
-        // Required empty public constructor
+    public static FragmentTaskAllTasks newInstance() {
+        return new FragmentTaskAllTasks();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_fragment_task_today, container, false);
+        View view = inflater.inflate(R.layout.fragment_task_alltasks_fragment, container, false);
         ButterKnife.bind(this, view);
 
         BaseApplication.getAppComponent().inject(this);
 
-        String currentDateTimeString = DateFormat.getDateInstance(DateFormat.SHORT).format(new Date());
-        KLog.e("todayid", sharedPreferencesManager.getPrefUserId());
-
-        mTaskTodayViewModel = ViewModelProviders.of(this).get(BlankViewModel.class);
-        mTaskTodayData = mTaskTodayViewModel.getTasksToday(currentDateTimeString
-                , sharedPreferencesManager.getPrefUserId());
+        mTaskWorkViewModel = ViewModelProviders.of(this).get(BlankViewModel.class);
+        mTaskWorkData = mTaskWorkViewModel.getAllTasks(sharedPreferencesManager.getPrefUserId());
 
         justToDoStructureTablesList = new ArrayList<>();
 
@@ -99,12 +84,11 @@ public class FragmentTaskToday extends Fragment implements RecyclerItemTouchHelp
         DividerItemDecoration decor = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         mTaskListRv.addItemDecoration(decor);
 
-        mTaskTodayData.observe(this, new Observer<List<JustToDoStructureTable>>() {
+        mTaskWorkData.observe(this, new Observer<List<JustToDoStructureTable>>() {
             @Override
             public void onChanged(@Nullable List<JustToDoStructureTable> justToDoStructureTables) {
 
                 if (justToDoStructureTables.size() != 0) {
-                    KLog.e("todays", justToDoStructureTables.get(0).task_title);
 
                     justToDoStructureTablesList = justToDoStructureTables;
                     mJustTaskAdapter = new JustTaskAdapter(justToDoStructureTablesList);
@@ -115,7 +99,6 @@ public class FragmentTaskToday extends Fragment implements RecyclerItemTouchHelp
                     mEmptyView.setVisibility(View.GONE);
                     mEmptyPic.setVisibility(View.GONE);
                 } else {
-                    KLog.e("todays NO");
 
                     mTaskListRv.setVisibility(View.GONE);
                     mEmptyView.setVisibility(View.VISIBLE);
@@ -151,7 +134,7 @@ public class FragmentTaskToday extends Fragment implements RecyclerItemTouchHelp
             // remove the item from recycler view
             mJustTaskAdapter.removeItem(viewHolder.getAdapterPosition());
             KLog.e("deletedIndex---", deletedItem);
-            mTaskTodayViewModel.deleteTask(deletedItem);
+            mTaskWorkViewModel.deleteTask(deletedItem);
             mJustTaskAdapter.notifyDataSetChanged();
 
             // showing snack bar with Undo option
@@ -178,7 +161,7 @@ public class FragmentTaskToday extends Fragment implements RecyclerItemTouchHelp
                     justToDoStructureTable.task_date = justToDoStructureTablesList.get(deletedIndex).task_date;
                     justToDoStructureTable.task_user_id = justToDoStructureTablesList.get(deletedIndex).task_user_id;
 
-                    mTaskTodayViewModel.insert(justToDoStructureTable);
+                    mTaskWorkViewModel.insert(justToDoStructureTable);
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);

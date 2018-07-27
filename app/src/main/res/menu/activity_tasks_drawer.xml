@@ -10,6 +10,11 @@
             android:title="Today" />
 
         <item
+            android:id="@+id/fragmentTaskAllTasks"
+            android:icon="@drawable/ic_view_list_white_24dp"
+            android:title="All Tasks" />
+
+        <item
             android:id="@+id/blankFragment"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="Home" />
@@ -28,23 +33,14 @@
             android:icon="@drawable/ic_store_black_24dp"
             android:title="Store" />
 
-    </group>
+        <item
+            android:id="@+id/nav_send"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Send" />
 
-    <group android:checkableBehavior="single">
-    <item android:title="Communicate">
-        <menu xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            tools:showIn="navigation_view">
-
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-            <item
-                android:id="@+id/navigation3"
-                android:icon="@drawable/ic_logout_white_24dp"
-                android:title="Log out" />
-        </menu>
-    </item>
+        <item
+            android:id="@+id/navigationSignOut"
+            android:icon="@drawable/ic_logout_white_24dp"
+            android:title="Log out" />
     </group>
 </menu>

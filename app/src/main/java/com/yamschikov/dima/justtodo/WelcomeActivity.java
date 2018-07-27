@@ -1,13 +1,11 @@
 package com.yamschikov.dima.justtodo;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,10 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,6 +43,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.relex.circleindicator.CircleIndicator;
 
 public class WelcomeActivity extends AppCompatActivity implements FacebookView, GoogleInView
         , GoogleApiClient.OnConnectionFailedListener {
@@ -88,38 +84,32 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
     private static final int RC_SIGN_IN = 9001;
     public static final int SIGN_OUT_CODE_GOOGLE = 1002;
 
-    // [START declare_auth_listener]
-    private FirebaseAuth.AuthStateListener mAuthListener;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+        setContentView(R.layout.activity_welcome4);
 
         ButterKnife.bind(this);
         BaseApplication.getAppComponent().inject(this);
-
-        layouts = new int[]{
-                R.layout.welcome_slide1,
-                R.layout.welcome_slide2};
-
-        sliderPagerAdapter = new SliderPagerAdapter();
-        mViewPageWelcome.setAdapter(sliderPagerAdapter);
-        mViewPageWelcome.addOnPageChangeListener(viewPagerPageChangeListener);
+        FirebaseApp.initializeApp(this);
+        mAuth = FirebaseAuth.getInstance();
 
         //Google
         fireBaseGoogleSigInPresenter = new FireBaseGoogleSigInPresenter();
         fireBaseGoogleSigInPresenter.attachView(this);
 
-        FirebaseApp.initializeApp(this);
-
         buildGoogleApiClient();
+
+        //facebook
+        fireBaseFacebookPresenter = new FireBaseFacebookPresenter();
+        fireBaseFacebookPresenter.attachView(this);
+
+        // Initialize Facebook Login button
+        mCallbackManager = CallbackManager.Factory.create();
 
         KLog.e("MMMMMMMMM1", mGoogleApiClient);
 
         // Checking for first time launch - before calling setContentView()
-        //prefManager = new PrefManager(this);
-
         if (sharedPreferencesManager.isFirstTimeLaunch()) {
             KLog.e("launchHomeScreen", sharedPreferencesManager.isFirstTimeLaunch());
 
@@ -129,18 +119,13 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
 
                     KLog.e("CODE------>", sharedPreferencesManager.getCheckSignOut() + " " + SIGN_OUT_CODE);
 
-                    //fireBaseFacebookPresenter.facebookSignOut();
-                    mAuth = FirebaseAuth.getInstance();
-                    mAuth.signOut();
-                    LoginManager.getInstance().logOut();
+                    fireBaseFacebookPresenter.facebookSignOut();
                     break;
 
                 case SIGN_OUT_CODE_GOOGLE:
 
                     KLog.e("CODE------>SIGN_OUT_CODE_GOOGLE", sharedPreferencesManager.getCheckSignOut());
-                    mAuth = FirebaseAuth.getInstance();
-
-                    KLog.e("MMMMMMMMM2````````````", mGoogleApiClient);
+                    KLog.e("MMMMMMMMM2", mGoogleApiClient);
 
                     fireBaseGoogleSigInPresenter.signOut(mGoogleApiClient);
 
@@ -157,44 +142,18 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
             finish();
         }
 
-        mAuth = FirebaseAuth.getInstance();
+        //view pager
+        layouts = new int[]{
+                R.layout.welcome_slide1,
+                R.layout.welcome_slide2};
 
-        //facebook
+        CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
 
-        fireBaseFacebookPresenter = new FireBaseFacebookPresenter();
-        fireBaseFacebookPresenter.attachView(this);
 
-        // Initialize Facebook Login button
-        mCallbackManager = CallbackManager.Factory.create();
-/*
-        // [START auth_state_listener]
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    KLog.d(TAGListner, "onAuthStateChanged:signed_in:" + user.getUid());
-                    // [START_EXCLUDE]
-                    // [END_EXCLUDE]
-
-                    if(mAuth.getCurrentUser() != null){
-
-                        // Finishing current Login Activity.
-                        finish();
-                        KLog.d("dffdfdgfdgdfd");
-                    }
-
-                } else {
-                    // User is signed out
-                    KLog.d(TAGListner, "onAuthStateChanged:signed_out");
-                    //updateUser(user);
-                }
-            }
-        };
-        // [END auth_state_listener]
-        */
+        sliderPagerAdapter = new SliderPagerAdapter();
+        mViewPageWelcome.setAdapter(sliderPagerAdapter);
+        indicator.setViewPager(mViewPageWelcome);
+        mViewPageWelcome.addOnPageChangeListener(viewPagerPageChangeListener);
     }
 
     public void buildGoogleApiClient() {
@@ -215,17 +174,10 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         mGoogleApiClient.connect();
-        /*mAuth.addAuthStateListener(mAuthListener);
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if (currentUser != null) {
-            updateUser(currentUser);
-        }*/
     }
 
     @OnClick({R.id.btnSignGoogle, R.id.btnSignFacebook, R.id.btnSignEmpty})
-    public void ff(View view) {
+    public void SignInButtonsOnClick(View view) {
 
         switch (view.getId()) {
 
@@ -239,11 +191,13 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
                         , getResources().getString(R.string.empty_user), "");
 
                 sharedPreferencesManager.setCheckSignOut(SIGN_OUT_CODE_EMPTY);
+                sharedPreferencesManager.setPrefUserId("empty");
                 finish();
                 //launchHomeScreen();
                 break;
 
             case R.id.btnSignFacebook:
+
                 sharedPreferencesManager.setFirstTimeLaunch(false);
                 sharedPreferencesManager.setCheckSignOut(SIGN_OUT_CODE);
                 LoginManager.getInstance().logInWithReadPermissions(WelcomeActivity.this,
@@ -268,11 +222,11 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
                 break;
 
             case R.id.btnSignGoogle:
+
                 sharedPreferencesManager.setFirstTimeLaunch(false);
                 sharedPreferencesManager.setCheckSignOut(SIGN_OUT_CODE_GOOGLE);
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 fireBaseGoogleSigInPresenter.signIn(signInIntent, mAuth, mGoogleApiClient);
-                KLog.e("ClickGoogle");
                 break;
         }
     }
@@ -281,7 +235,7 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         KLog.e(TAGGOOGLE, "onConnectionFailed:" + connectionResult);
-        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Google Sign has error.", Toast.LENGTH_SHORT).show();
     }
 
     private void launchHomeScreen() {
@@ -323,6 +277,7 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
         String mUserIdNameTextView = "";
         String mUserIdEmailTextView = "";
         String mUserIdPicTextView = "";
+        String mUserIdTextView = "";
 
 //        KLog.e("useruser", user.getDisplayName());
 
@@ -330,8 +285,10 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
             mUserIdNameTextView = user.getDisplayName();
             mUserIdEmailTextView = user.getEmail();
             mUserIdPicTextView = String.valueOf(user.getPhotoUrl());
-            String ff = user.getUid();
-            KLog.e("updateUser--->email", ff);
+            mUserIdTextView = user.getUid();
+
+            sharedPreferencesManager.setPrefUserId(mUserIdTextView);
+            KLog.e("updateUser--->mUserIdTextView", mUserIdTextView);
 
             Intent intent = new Intent(this, TasksActivity.class);
             intent.putExtra(EXTRA_FIREBASEUSERNAME, mUserIdNameTextView);
@@ -341,8 +298,6 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
             startActivity(intent);
             finish();
 
-            KLog.e("dno", FirebaseAuth.getInstance().getCurrentUser());
-
             //prefUser
             sharedPreferencesManager.setFirstUser(mUserIdNameTextView, mUserIdEmailTextView, mUserIdPicTextView);
             KLog.e("refManager.setFirstUser", mUserIdEmailTextView);
@@ -351,10 +306,9 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
 
         }
 
-        //KLog.d("Recordered in firebase");
-
+        /*KLog.d("Recordered in firebase");
         Toast.makeText(this, "Email logged",
-                Toast.LENGTH_LONG).show();
+                Toast.LENGTH_LONG).show();*/
     }
 
     @Override
@@ -427,7 +381,6 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
         public boolean isViewFromObject(View view, Object obj) {
             return view == obj;
         }
-
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {

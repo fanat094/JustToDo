@@ -86,85 +86,42 @@
                 <map>
                   <entry key="blankFragment">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-95" />
-                            <option name="y" value="-163" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="fragmentTaskAllTasks">
+                    <value>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="fragmentTaskPersonal">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-293" />
-                            <option name="y" value="144" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="fragmentTaskStore">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-92" />
-                            <option name="y" value="143" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="fragmentTaskToday">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-288" />
-                            <option name="y" value="-162" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="fragmentTaskWork">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="103" />
-                            <option name="y" value="-162" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
-                  <entry key="navigation3">
+                  <entry key="navigationSignOut">
                     <value>
                       <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="260" />
-                            <option name="y" value="20" />
-                          </Point>
-                        </option>
                         <option name="myPositions">
                           <map>
                             <entry key="welcomeActivity">
                               <value>
-                                <LayoutPositions>
-                                  <option name="myPosition">
-                                    <Point>
-                                      <option name="x" value="20" />
-                                      <option name="y" value="20" />
-                                    </Point>
-                                  </option>
-                                </LayoutPositions>
+                                <LayoutPositions />
                               </value>
                             </entry>
                           </map>

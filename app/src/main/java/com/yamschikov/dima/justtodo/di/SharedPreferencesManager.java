@@ -8,8 +8,6 @@ public class SharedPreferencesManager {
 
     private SharedPreferences mSharedPreferences;
 
-    // Shared preferences file name
-    private static final String PREF_NAME = "androidhive-welcome";
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
 
     private static final String PREF_USER_NAME = "prefusername";
@@ -21,12 +19,15 @@ public class SharedPreferencesManager {
 
     private static final String PREF_CHECK_SIGNOUT = "prefchecksignout";
 
+    private static final String PREF_USER_ID = "prefuserid";
+
 
     @Inject
     public SharedPreferencesManager(SharedPreferences mSharedPreferences) {
         this.mSharedPreferences = mSharedPreferences;
     }
 
+    //FirstTime
     public void setFirstTimeLaunch(boolean isFirstTime) {
         mSharedPreferences.edit().putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime).apply();
     }
@@ -36,11 +37,11 @@ public class SharedPreferencesManager {
     }
 
     //prefuser
-
     public void setFirstUser(String prefUserName, String prefUserEmail, String prefUserPic) {
         mSharedPreferences.edit().putString(PREF_USER_NAME, prefUserName).apply();
         mSharedPreferences.edit().putString(PREF_USER_EMAIL, prefUserEmail).apply();
-        mSharedPreferences.edit().putString(PREF_USER_PIC, prefUserPic).apply();}
+        mSharedPreferences.edit().putString(PREF_USER_PIC, prefUserPic).apply();
+    }
 
     public String getFirstUserName() {
         return mSharedPreferences.getString(PREF_USER_NAME, "");
@@ -71,11 +72,21 @@ public class SharedPreferencesManager {
         mSharedPreferences.edit().putString(PREF_CHECKED_DATE, checkedDate).apply();
     }
 
+    //signOut
     public int getCheckSignOut() {
         return mSharedPreferences.getInt(PREF_CHECK_SIGNOUT, 1001);
     }
 
     public void setCheckSignOut(int checkSignOut) {
         mSharedPreferences.edit().putInt(PREF_CHECK_SIGNOUT, checkSignOut).apply();
+    }
+
+    //userID
+    public void setPrefUserId(String prefUserId) {
+        mSharedPreferences.edit().putString(PREF_USER_ID, prefUserId).apply();
+    }
+
+    public String getPrefUserId() {
+        return mSharedPreferences.getString(PREF_USER_ID, "");
     }
 }

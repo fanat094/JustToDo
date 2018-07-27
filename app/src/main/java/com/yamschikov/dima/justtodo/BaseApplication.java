@@ -15,7 +15,8 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        appComponent = DaggerAppComponent.builder().appModule(new AppModule(this))
+        appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
                 .sharedPreferencesModule(new SharedPreferencesModule(getApplicationContext()))
                 .build();
     }

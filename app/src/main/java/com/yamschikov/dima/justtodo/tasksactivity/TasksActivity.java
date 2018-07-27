@@ -42,17 +42,12 @@ public class TasksActivity extends AppCompatActivity {
     TextView mIdUserEmail;
     CircleImageView mIdUserPic;
 
-    @BindView(R.id.toolbarTask)
-    Toolbar mToolbarTask;
-    @BindView(R.id.fabTask)
-    FloatingActionButton mFabTask;
-    @BindView(R.id.drawerTask)
-    DrawerLayout mDrawerTask;
-    @BindView(R.id.navViewTask)
-    NavigationView mNavViewTask;
+    @BindView(R.id.toolbarTask) Toolbar mToolbarTask;
+    @BindView(R.id.fabTask) FloatingActionButton mFabTask;
+    @BindView(R.id.drawerTask) DrawerLayout mDrawerTask;
+    @BindView(R.id.navViewTask) NavigationView mNavViewTask;
 
     View headerView;
-    //PrefManager prefManager;
     @Inject
     SharedPreferencesManager sharedPreferencesManager;
 
@@ -109,7 +104,7 @@ public class TasksActivity extends AppCompatActivity {
 
                 switch (destination.getId()) {
 
-                    case R.id.navigation3:
+                    case R.id.navigationSignOut:
 
                         KLog.e("destinationwelcomeActivity");
                         sharedPreferencesManager.setFirstTimeLaunch(true);
@@ -198,12 +193,4 @@ public class TasksActivity extends AppCompatActivity {
             }
         }
     }
-
-   /* @Override
-    public void onStop() {
-        super.onStop();
-        sharedPreferencesManager.setFirstTimeLaunch(true);
-        finish();
-        KLog.e("NO onStop");
-    }*/
 }

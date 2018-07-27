@@ -30,7 +30,7 @@
         android:name="com.yamschikov.dima.justtodo.tasksactivity.FragmentTaskStore"
         android:label="@string/store_task_fragment"
         tools:layout="@layout/fragment_task_store_fragment" />
-    <navigation android:id="@+id/navigation3"
+    <navigation android:id="@+id/navigationSignOut"
         app:startDestination="@id/welcomeActivity">
         <activity
             android:id="@+id/welcomeActivity"
@@ -38,4 +38,8 @@
             android:label="activity_welcome"
             tools:layout="@layout/activity_welcome" />
     </navigation>
+    <fragment
+        android:id="@+id/fragmentTaskAllTasks"
+        android:name="com.yamschikov.dima.justtodo.tasksactivity.FragmentTaskAllTasks"
+        android:label="@string/alltasks_task_fragment" />
 </navigation>

@@ -16,26 +16,26 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TaskTodayAdapter extends RecyclerView.Adapter<TaskTodayAdapter.TaskTodayHolder> {
+public class JustTaskAdapter extends RecyclerView.Adapter<JustTaskAdapter.JustTaskHolder> {
 
     List<JustToDoStructureTable> justToDoStructureTablesList;
 
-    public TaskTodayAdapter(List<JustToDoStructureTable> justToDoStructureTablesList) {
+    public JustTaskAdapter(List<JustToDoStructureTable> justToDoStructureTablesList) {
         this.justToDoStructureTablesList = justToDoStructureTablesList;
     }
 
     @NonNull
     @Override
-    public TaskTodayHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public JustTaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.task_item3, parent, false);
 
-        return new TaskTodayHolder(itemView);
+        return new JustTaskHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TaskTodayHolder holder, int position) {
+    public void onBindViewHolder(@NonNull JustTaskHolder holder, int position) {
 
         JustToDoStructureTable justToDoStructureTable = justToDoStructureTablesList.get(position);
 
@@ -64,7 +64,7 @@ public class TaskTodayAdapter extends RecyclerView.Adapter<TaskTodayAdapter.Task
         notifyDataSetChanged();
     }
 
-    public class TaskTodayHolder extends RecyclerView.ViewHolder {
+    public class JustTaskHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.justTask)
         TextView mJustTask;
@@ -76,7 +76,7 @@ public class TaskTodayAdapter extends RecyclerView.Adapter<TaskTodayAdapter.Task
         @BindView(R.id.view_foreground)
         ConstraintLayout viewForeground;
 
-        public TaskTodayHolder(View itemView) {
+        public JustTaskHolder(View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);

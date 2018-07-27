@@ -31,16 +31,44 @@ public class BlankViewModel extends AndroidViewModel {
         mRepository = new TaskRepository();
     }
 
-    //query
-    public LiveData<List<JustToDoStructureTable>> getAllTask() {
-        return justToDoDao.getAllLiveData();
-    }
-
     public void deleteTask(JustToDoStructureTable justToDoStructureTable) {
         mRepository.deleteTask(justToDoStructureTable);
     }
 
     public void insert(JustToDoStructureTable justToDoStructureTable) {
         mRepository.insert(justToDoStructureTable);
+    }
+
+    //query param
+    public LiveData<List<JustToDoStructureTable>> getTasksToday(String task_date, String task_user_id) {
+        return justToDoDao.getTasksTodayLiveData(task_date, task_user_id);
+    }
+
+    public LiveData<List<JustToDoStructureTable>> getAllTasks(String task_user_id) {
+        return justToDoDao.getAllTasksLiveData(task_user_id);
+    }
+
+    public LiveData<List<JustToDoStructureTable>> getTasksHome(String task_kategory, String task_user_id) {
+        return justToDoDao.getTasksHomeLiveData(task_kategory, task_user_id);
+    }
+
+    public LiveData<List<JustToDoStructureTable>> getTasksWork(String task_kategory, String task_user_id) {
+        return justToDoDao.getTasksWorkLiveData(task_kategory, task_user_id);
+    }
+
+    public LiveData<List<JustToDoStructureTable>> getTasksPersonal(String task_kategory, String task_user_id) {
+        return justToDoDao.getTasksPersonalLiveData(task_kategory, task_user_id);
+    }
+
+    public LiveData<List<JustToDoStructureTable>> getTasksStore(String task_kategory, String task_user_id) {
+        return justToDoDao.getTasksStoreLiveData(task_kategory, task_user_id);
+    }
+
+
+
+
+    //
+    public LiveData<List<JustToDoStructureTable>> getAllTask() {
+        return justToDoDao.getAllLiveData();
     }
 }

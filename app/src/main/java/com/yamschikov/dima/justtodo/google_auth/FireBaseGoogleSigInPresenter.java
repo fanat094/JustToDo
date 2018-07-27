@@ -1,7 +1,9 @@
 package com.yamschikov.dima.justtodo.google_auth;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -16,6 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.socks.library.KLog;
 
 public class FireBaseGoogleSigInPresenter {
@@ -37,7 +40,31 @@ public class FireBaseGoogleSigInPresenter {
         view.onReadyActivityStartForResult(signInIntent, RC_SIGN_IN);
     }
 
+    public void checkEmail () {
+
+        mAuth.fetchSignInMethodsForEmail("yamschikovdima@gmail.com")
+                .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+
+                        boolean check = !task.getResult().getSignInMethods().isEmpty();
+
+
+                        if (!check) {
+
+                            KLog.e("qqqqqqqNot found");
+                        }
+
+                        else {
+                            KLog.e("qqqqqqqqalready");
+                        }
+                    }
+                });
+    }
+
     public void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+
+        //checkEmail();
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -50,33 +77,39 @@ public class FireBaseGoogleSigInPresenter {
                             KLog.e("STATUS GOOGLEIN", user.getDisplayName());
                         } else {
                             KLog.e("STATUS GOOGLEINError");
+                            view.updateUser(null);
                         }
                     }
                 });
     }
 
-    public void signOut(GoogleApiClient mGoogleApiClient) {
-        // Firebase sign out
-        mAuth.signOut();
+    public void signOut(final GoogleApiClient mGoogleApiClient) {
+        mGoogleApiClient.connect();
+        mGoogleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(Bundle bundle) {
 
-        /*KLog.e("MMMMMMMMM3````````````",mGoogleApiClient);
+                FirebaseAuth.getInstance().signOut();
+                if(mGoogleApiClient.isConnected()) {
+                    Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(@NonNull Status status) {
+                            if (status.isSuccess()) {
+                                KLog.d("TAG", "User Logged out");
+                                view.updateUser(null);
+                            }
+                        }
+                    });
+                }
+            }
 
-        // Google sign out
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        //view.updateUser(null);
-                    }
-                });*/
+            @Override
+            public void onConnectionSuspended(int i) {
+                KLog.d("TAG", "Google API Client Connection Suspended");
+            }
+        });
     }
 
-    public void revokeAccess(GoogleApiClient mGoogleApiClient) {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                    }
-                });
-    }
+
+
 }

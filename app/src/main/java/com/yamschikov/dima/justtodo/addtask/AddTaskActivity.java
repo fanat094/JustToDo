@@ -105,6 +105,8 @@ public class AddTaskActivity extends AppCompatActivity implements CustomDatePick
         blankViewModel = ViewModelProviders.of(this).get(BlankViewModel.class);
 
         inputTaskTitle.addTextChangedListener(new TaskWatcher(inputTaskTitle));
+
+        sharedPreferencesManager.setCheckedCategory("");
     }
 
     public void menuCategory() {
@@ -298,11 +300,15 @@ public class AddTaskActivity extends AppCompatActivity implements CustomDatePick
             selectedDateD = "0" + dayOfMonth;
         }
 
-        String dateParam = year + "/" + selectedDateM + selectedDateD;
+        String yearstr = String.valueOf(year).substring(2);
+
+        String dd = yearstr.substring(2);
+
+        String dateParam = yearstr + "/" + selectedDateM + selectedDateD;
         //prefManager.setCheckedDate(dateParam);
 
-        String dateParamBtn = selectedDateD + "." + selectedDateM + "." + year;
-        KLog.e("date------->", "" + dateParam);
+        String dateParamBtn = selectedDateD + "." + selectedDateM + "." + yearstr;
+        KLog.e("date------->", "" + dateParam, "year"+yearstr);
         mBtnSetDate.setText(dateParamBtn);
         //prefManager.setCheckedDate(dateParamBtn);
         sharedPreferencesManager.setCheckedDate(dateParamBtn);
@@ -379,13 +385,13 @@ public class AddTaskActivity extends AppCompatActivity implements CustomDatePick
             mDate = currentDateTimeString;
         }
 
-
         //roomInsert
         JustToDoStructureTable justToDoStructureTable = new JustToDoStructureTable();
         justToDoStructureTable.task_title = mTitle;
         justToDoStructureTable.task_content = mContent;
         justToDoStructureTable.task_category = mCategory;
         justToDoStructureTable.task_date = mDate;
+        justToDoStructureTable.task_user_id = sharedPreferencesManager.getPrefUserId();
 
         blankViewModel.insert(justToDoStructureTable);
 

@@ -24,8 +24,33 @@ public interface JustToDoDao {
     void delete(JustToDoStructureTable justToDoStructureTable);
 
     @Query("SELECT * FROM JustToDoStructureTable")
-    List<JustToDoStructureTable> getAll();
-
-    @Query("SELECT * FROM JustToDoStructureTable")
     LiveData<List<JustToDoStructureTable>> getAllLiveData();
+
+    // query category //
+
+    //AllTasks
+    @Query("SELECT * FROM JustToDoStructureTable WHERE task_user_id LIKE :task_user_id")
+    LiveData<List<JustToDoStructureTable>> getAllTasksLiveData(String task_user_id);
+
+    //Today
+    @Query("SELECT * FROM JustToDoStructureTable WHERE task_date LIKE :task_date AND task_user_id LIKE :task_user_id")
+    LiveData<List<JustToDoStructureTable>> getTasksTodayLiveData(String task_date, String task_user_id);
+
+    //Work
+    @Query("SELECT * FROM JustToDoStructureTable WHERE task_category LIKE :task_category AND task_user_id LIKE :task_user_id")
+    LiveData<List<JustToDoStructureTable>> getTasksWorkLiveData(String task_category, String task_user_id);
+
+
+
+    //Home
+    @Query("SELECT * FROM JustToDoStructureTable WHERE task_category LIKE :task_category AND task_user_id LIKE :task_user_id")
+    LiveData<List<JustToDoStructureTable>> getTasksHomeLiveData(String task_category, String task_user_id);
+
+    //Personal
+    @Query("SELECT * FROM JustToDoStructureTable WHERE task_category LIKE :task_category AND task_user_id LIKE :task_user_id")
+    LiveData<List<JustToDoStructureTable>> getTasksPersonalLiveData(String task_category, String task_user_id);
+
+    //Store
+    @Query("SELECT * FROM JustToDoStructureTable WHERE task_category LIKE :task_category AND task_user_id LIKE :task_user_id")
+    LiveData<List<JustToDoStructureTable>> getTasksStoreLiveData(String task_category, String task_user_id);
 }

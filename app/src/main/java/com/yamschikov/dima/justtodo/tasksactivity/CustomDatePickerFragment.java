@@ -25,6 +25,7 @@ public class CustomDatePickerFragment extends DialogFragment implements DatePick
          yy = calendar.get(Calendar.YEAR);
          mm = calendar.get(Calendar.MONTH);
          dd = calendar.get(Calendar.DAY_OF_MONTH);
+
         return new DatePickerDialog(getActivity(), R.style.DialogTheme, this, yy, mm, dd);
     }
 

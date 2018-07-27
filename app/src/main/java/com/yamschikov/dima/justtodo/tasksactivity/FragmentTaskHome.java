@@ -17,36 +17,48 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.socks.library.KLog;
+import com.yamschikov.dima.justtodo.BaseApplication;
 import com.yamschikov.dima.justtodo.R;
+import com.yamschikov.dima.justtodo.di.SharedPreferencesManager;
 import com.yamschikov.dima.justtodo.room_db.JustToDoStructureTable;
+import com.yamschikov.dima.justtodo.tasksactivity.adapters.JustTaskAdapter;
 import com.yamschikov.dima.justtodo.tasksactivity.adapters.RecyclerItemTouchHelper;
-import com.yamschikov.dima.justtodo.tasksactivity.adapters.TaskTodayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
-    private BlankViewModel mViewModel;
-    LiveData<List<JustToDoStructureTable>> data;
+    private BlankViewModel mTaskHomeViewModel;
+    LiveData<List<JustToDoStructureTable>> mTaskHomeData;
+
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
 
     @BindView(R.id.task_list_rv)
     RecyclerView mTaskListRv;
 
+    @BindView(R.id.mEmptyView)
+    TextView mEmptyView;
+
+    @BindView(R.id.mEmptyPic)
+    ImageView mEmptyPic;
+
     Snackbar snackbar;
     View snackbarView;
 
-    private TaskTodayAdapter mTaskTodayAdapter;
+    private JustTaskAdapter mJustTaskAdapter;
 
     List<JustToDoStructureTable> justToDoStructureTablesList;
-
-    List<JustToDoStructureTable> localList;
 
     public static FragmentTaskHome newInstance() {
         return new FragmentTaskHome();
@@ -59,11 +71,13 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
         View view = inflater.inflate(R.layout.fragment_task_home, container, false);
         ButterKnife.bind(this, view);
 
-        mViewModel = ViewModelProviders.of(this).get(BlankViewModel.class);
-        data = mViewModel.getAllTask();
+        BaseApplication.getAppComponent().inject(this);
+
+        mTaskHomeViewModel = ViewModelProviders.of(this).get(BlankViewModel.class);
+        mTaskHomeData = mTaskHomeViewModel.getTasksHome(getResources().getString(R.string.home_task_fragment)
+                ,sharedPreferencesManager.getPrefUserId());
 
         justToDoStructureTablesList = new ArrayList<>();
-        localList = new ArrayList<>();
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mTaskListRv.setItemAnimator(new DefaultItemAnimator());
@@ -71,16 +85,28 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
         DividerItemDecoration decor = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         mTaskListRv.addItemDecoration(decor);
 
-        data.observe(this, new Observer<List<JustToDoStructureTable>>() {
+        mTaskHomeData.observe(this, new Observer<List<JustToDoStructureTable>>() {
             @Override
             public void onChanged(@Nullable List<JustToDoStructureTable> justToDoStructureTables) {
 
-                KLog.e("Check-------------------------!");
+                if (justToDoStructureTables.size() != 0) {
+                    KLog.e("directors", justToDoStructureTables.get(0).task_title);
 
-                justToDoStructureTablesList = justToDoStructureTables;
-                mTaskTodayAdapter = new TaskTodayAdapter(justToDoStructureTablesList);
-                mTaskListRv.setAdapter(mTaskTodayAdapter);
-                mTaskTodayAdapter.setData(justToDoStructureTablesList);
+                    justToDoStructureTablesList = justToDoStructureTables;
+                    mJustTaskAdapter = new JustTaskAdapter(justToDoStructureTablesList);
+                    mTaskListRv.setAdapter(mJustTaskAdapter);
+                    mJustTaskAdapter.setData(justToDoStructureTablesList);
+
+                    mTaskListRv.setVisibility(View.VISIBLE);
+                    mEmptyView.setVisibility(View.GONE);
+                    mEmptyPic.setVisibility(View.GONE);
+                } else {
+                    KLog.e("directors NO");
+
+                    mTaskListRv.setVisibility(View.GONE);
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mEmptyPic.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -90,7 +116,6 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(BlankViewModel.class);
         // TODO: Use the ViewModel
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback =
                 new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
@@ -99,12 +124,8 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        /*if (viewHolder instanceof TaskTodayAdapter.TaskTodayHolder) {
-            // remove the item from recycler view
-            mTaskTodayAdapter.removeItem(viewHolder.getAdapterPosition());
-        }*/
 
-        if (viewHolder instanceof TaskTodayAdapter.TaskTodayHolder) {
+        if (viewHolder instanceof JustTaskAdapter.JustTaskHolder) {
             // get the removed item name to display it in snack bar
             String name = justToDoStructureTablesList.get(viewHolder.getAdapterPosition()).task_title;
 
@@ -113,10 +134,10 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
             final int deletedIndex = viewHolder.getAdapterPosition();
 
             // remove the item from recycler view
-            mTaskTodayAdapter.removeItem(viewHolder.getAdapterPosition());
+            mJustTaskAdapter.removeItem(viewHolder.getAdapterPosition());
             KLog.e("deletedIndex---", deletedItem);
-            mViewModel.deleteTask(deletedItem);
-            mTaskTodayAdapter.notifyDataSetChanged();
+            mTaskHomeViewModel.deleteTask(deletedItem);
+            mJustTaskAdapter.notifyDataSetChanged();
 
             // showing snack bar with Undo option
             snackbar = Snackbar.make(mTaskListRv, name + " " + getResources().getString(R.string.messageremovedfromtask),
@@ -132,7 +153,7 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
                 public void onClick(View view) {
 
                     // undo is selected, restore the deleted item
-                    mTaskTodayAdapter.restoreItem(deletedItem, deletedIndex);
+                    mJustTaskAdapter.restoreItem(deletedItem, deletedIndex);
 
                     //roomInsertUndo
                     JustToDoStructureTable justToDoStructureTable = new JustToDoStructureTable();
@@ -140,8 +161,9 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
                     justToDoStructureTable.task_content = justToDoStructureTablesList.get(deletedIndex).task_content;
                     justToDoStructureTable.task_category = justToDoStructureTablesList.get(deletedIndex).task_category;
                     justToDoStructureTable.task_date = justToDoStructureTablesList.get(deletedIndex).task_date;
+                    justToDoStructureTable.task_user_id = justToDoStructureTablesList.get(deletedIndex).task_user_id;
 
-                    mViewModel.insert(justToDoStructureTable);
+                    mTaskHomeViewModel.insert(justToDoStructureTable);
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);
