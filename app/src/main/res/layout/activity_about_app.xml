@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <TextView
+        android:id="@+id/justaAboutApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/just_about_app"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/justAboutAppText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="?android:listDivider"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:showDividers="end"
+        android:text="@string/just_about_app_text"
+        app:layout_constraintStart_toStartOf="@+id/justaAboutApp"
+        app:layout_constraintTop_toBottomOf="@+id/justaAboutApp" />
+
+    <TextView
+        android:id="@+id/justVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/just_version"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/justAboutAppText"
+        app:layout_constraintTop_toBottomOf="@+id/justAboutAppText" />
+
+    <TextView
+        android:id="@+id/justVersionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/just_version_text"
+        app:layout_constraintStart_toStartOf="@+id/justVersion"
+        app:layout_constraintTop_toBottomOf="@+id/justVersion" />
+
+    <TextView
+        android:id="@+id/justDeveloper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/just_developer"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/justVersionText"
+        app:layout_constraintTop_toBottomOf="@+id/justVersionText" />
+
+    <TextView
+        android:id="@+id/justDeveloperText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/just_developer_text"
+        app:layout_constraintStart_toStartOf="@+id/justDeveloper"
+        app:layout_constraintTop_toBottomOf="@+id/justDeveloper" />
+
+
+    <TextView
+        android:id="@+id/jusFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/just_feedback"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/justDeveloperText"
+        app:layout_constraintTop_toBottomOf="@+id/justDeveloperText" />
+
+    <TextView
+        android:id="@+id/justFeedbackText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/just_feedback_text"
+        app:layout_constraintStart_toStartOf="@+id/jusFeedback"
+        app:layout_constraintTop_toBottomOf="@+id/jusFeedback" />
+
+    <ImageButton
+        android:id="@+id/btnJustShare"
+        style="@style/ButtonStyleAboutAppActvity.Accent"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_share_white_24dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnJustGrade"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/justFeedbackText" />
+
+    <ImageButton
+        android:id="@+id/btnJustGrade"
+        style="@style/ButtonStyleAboutAppActvity.Accent"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_grade_white_24dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnJusEmailFeedbackBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnJustShare"
+        app:layout_constraintTop_toBottomOf="@+id/justFeedbackText" />
+
+    <ImageButton
+        android:id="@+id/btnJusEmailFeedbackBtn"
+        style="@style/ButtonStyleAboutAppActvity.Accent"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_email_feedback_white_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnJustGrade"
+        app:layout_constraintTop_toBottomOf="@+id/justFeedbackText" />
+
+</android.support.constraint.ConstraintLayout>

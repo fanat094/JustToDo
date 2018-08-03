@@ -40,6 +40,15 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+/////////////
+
+    <style name="ButtonStyleAboutAppActvity" parent="Widget.AppCompat.Button.Colored" />
+
+    <style name="ButtonStyleAboutAppActvity.Accent">
+        <item name="android:background">@drawable/bg_btn_about_app</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

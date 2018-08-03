@@ -15,6 +15,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -81,14 +84,12 @@ public class FragmentTaskToday extends Fragment implements RecyclerItemTouchHelp
 
         View view = inflater.inflate(R.layout.fragment_fragment_task_today, container, false);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
         BaseApplication.getAppComponent().inject(this);
 
-        String currentDateTimeString = DateFormat.getDateInstance(DateFormat.SHORT).format(new Date());
-        KLog.e("todayid", sharedPreferencesManager.getPrefUserId());
-
         mTaskTodayViewModel = ViewModelProviders.of(this).get(BlankViewModel.class);
-        mTaskTodayData = mTaskTodayViewModel.getTasksToday(currentDateTimeString
+        mTaskTodayData = mTaskTodayViewModel.getTasksToday(getCurrentTaskDate()
                 , sharedPreferencesManager.getPrefUserId());
 
         justToDoStructureTablesList = new ArrayList<>();
@@ -135,6 +136,50 @@ public class FragmentTaskToday extends Fragment implements RecyclerItemTouchHelp
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback =
                 new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mTaskListRv);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.tasks, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_delete_all:
+
+                if (justToDoStructureTablesList.size() != 0) {
+
+                    mJustTaskAdapter.removeAllItem();
+                    mTaskTodayViewModel.deleteTaskByToday(getCurrentTaskDate()
+                            , sharedPreferencesManager.getPrefUserId());
+
+                } else {
+
+                    mTaskListRv.setVisibility(View.GONE);
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mEmptyPic.setVisibility(View.VISIBLE);
+
+                    snackbar = Snackbar.make(mTaskListRv, getResources().getString(R.string.snackbartaskisempty),
+                            Snackbar.LENGTH_SHORT);
+                    snackbarView = snackbar.getView();
+                    TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.RED);
+                    snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    snackbar.show();
+                }
+
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private String getCurrentTaskDate() {
+        String currentDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(new Date());
+        return currentDateString;
     }
 
     @Override

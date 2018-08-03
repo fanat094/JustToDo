@@ -53,8 +53,11 @@
         <activity
             android:name=".addtask.AddTaskActivity"
             android:parentActivityName=".tasksactivity.TasksActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".EmptyActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AboutAppActivity"
+            android:label="@string/aboutapp_activity"
+            android:parentActivityName=".tasksactivity.TasksActivity" />
     </application>
 
 </manifest>

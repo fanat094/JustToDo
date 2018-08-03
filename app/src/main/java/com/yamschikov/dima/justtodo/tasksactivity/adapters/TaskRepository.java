@@ -19,7 +19,7 @@ public class TaskRepository {
     }
 
     //delete task
-    public void deleteTask(JustToDoStructureTable justToDoStructureTable)  {
+    public void deleteTask(JustToDoStructureTable justToDoStructureTable) {
         new deleteTaskAsyncTask(justToDoDao).execute(justToDoStructureTable);
     }
 
@@ -55,6 +55,66 @@ public class TaskRepository {
         @Override
         protected Void doInBackground(final JustToDoStructureTable... params) {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    ///////////////////
+    //delete all tasks
+    public void deleteAll(String userId) {
+        new deleteAllTasksAsyncTask(justToDoDao).execute(userId);
+    }
+
+    private static class deleteAllTasksAsyncTask extends AsyncTask<String, Void, Void> {
+        private JustToDoDao mAsyncTaskDao;
+
+        deleteAllTasksAsyncTask(JustToDoDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            mAsyncTaskDao.deleteAll(strings[0]);
+            return null;
+        }
+    }
+
+    //deleta tasks by categoty
+    public void deleteTaskByCategory(String userId, String taskCategory) {
+        new deleteTasksByCategory(justToDoDao).execute(userId, taskCategory);
+    }
+
+    private static class deleteTasksByCategory extends AsyncTask<String, Void, Void> {
+        private JustToDoDao mAsyncTaskDao;
+
+        deleteTasksByCategory(JustToDoDao dao) {
+            mAsyncTaskDao = dao;
+
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            mAsyncTaskDao.deleteAllTaskByCategory(strings[0],strings[1]);
+            return null;
+        }
+    }
+
+    //deleta tasks by today
+    public void deleteTaskByToday(String userId, String taskDate) {
+        new deleteTaskByToday(justToDoDao).execute(userId, taskDate);
+    }
+
+    private static class deleteTaskByToday extends AsyncTask<String, Void, Void> {
+        private JustToDoDao mAsyncTaskDao;
+
+        deleteTaskByToday(JustToDoDao dao) {
+            mAsyncTaskDao = dao;
+
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            mAsyncTaskDao.deleteAllTaskByToday(strings[0],strings[1]);
             return null;
         }
     }

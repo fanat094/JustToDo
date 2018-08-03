@@ -39,6 +39,19 @@ public class BlankViewModel extends AndroidViewModel {
         mRepository.insert(justToDoStructureTable);
     }
 
+    //delete param
+    public void deleteAll(String userId) {
+        mRepository.deleteAll(userId);
+    }
+
+    public void deleteTaskByCategory(String userId, String taskCategory) {
+        mRepository.deleteTaskByCategory(userId, taskCategory);
+    }
+
+    public void deleteTaskByToday(String userId, String taskDate) {
+        mRepository.deleteTaskByToday(userId, taskDate);
+    }
+
     //query param
     public LiveData<List<JustToDoStructureTable>> getTasksToday(String task_date, String task_user_id) {
         return justToDoDao.getTasksTodayLiveData(task_date, task_user_id);
@@ -67,7 +80,7 @@ public class BlankViewModel extends AndroidViewModel {
 
 
 
-    //
+    //old
     public LiveData<List<JustToDoStructureTable>> getAllTask() {
         return justToDoDao.getAllLiveData();
     }

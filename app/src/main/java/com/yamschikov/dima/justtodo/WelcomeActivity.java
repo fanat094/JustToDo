@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -48,26 +47,19 @@ import me.relex.circleindicator.CircleIndicator;
 public class WelcomeActivity extends AppCompatActivity implements FacebookView, GoogleInView
         , GoogleApiClient.OnConnectionFailedListener {
 
-    private SliderPagerAdapter sliderPagerAdapter;
-    private int[] layouts;
-
-    @BindView(R.id.view_pager_welcome)
-    ViewPager mViewPageWelcome;
-    @BindView(R.id.btnSignEmpty)
-    Button mBtnSignEmpty;
-
-    @BindView(R.id.btnSignGoogle)
-    Button btnSignGoogle;
-    //private PrefManager prefManager;
     @Inject
     SharedPreferencesManager sharedPreferencesManager;
 
+    @BindView(R.id.viewPagerWelcome)
+    ViewPager mViewPageWelcome;
+
+    @BindView(R.id.indicatorWelcome)
+    CircleIndicator mIndicatorWelcome;
+
+    private SliderPagerAdapter sliderPagerAdapter;
+    private int[] layouts;
+
     private CallbackManager mCallbackManager;
-    private static final String TAG = "FacebookAuthentication";
-    private static final String TAGGOOGLE = "FacebookAuthentication";
-
-    private static final String TAGListner = "TAGListner";
-
     private FirebaseAuth mAuth;
     private GoogleApiClient mGoogleApiClient;
     private GoogleSignInOptions gso;
@@ -75,19 +67,24 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
     FireBaseGoogleSigInPresenter fireBaseGoogleSigInPresenter;
 
     public static final String EXTRA_FIREBASEUSERNAME = "firebaseusername";
-    public static final String EXTRA_FIREBASEUSEREMAIL = "firebaseuseremail";
     public static final String EXTRA_FIREBASEUSERPIC = "firebaseuserpic";
     public static final String EXTRA_FIREBASEUSERLABEL = "firebaseuserlabel";
+    public static final int EXTRA_FIREBASEUSERLABELONE = 1;
+    public static final int EXTRA_FIREBASEUSERLABELTWOO = 2;
 
-    public static final int SIGN_OUT_CODE = 1001;
     public static final int SIGN_OUT_CODE_EMPTY = 1000;
-    private static final int RC_SIGN_IN = 9001;
+    public static final int SIGN_OUT_CODE_FACEBOOK = 1001;
     public static final int SIGN_OUT_CODE_GOOGLE = 1002;
+    private static final int RC_SIGN_IN = 9001;
+
+    private static final String TAG = "FacebookAuthentication";
+    private static final String TAGGOOGLE = "FacebookAuthentication";
+    private static final String TAGListner = "TAGListner";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome4);
+        setContentView(R.layout.activity_welcome);
 
         ButterKnife.bind(this);
         BaseApplication.getAppComponent().inject(this);
@@ -107,7 +104,7 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
 
-        KLog.e("MMMMMMMMM1", mGoogleApiClient);
+        KLog.e("mGoogleApiClient", mGoogleApiClient);
 
         // Checking for first time launch - before calling setContentView()
         if (sharedPreferencesManager.isFirstTimeLaunch()) {
@@ -115,21 +112,21 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
 
             switch (sharedPreferencesManager.getCheckSignOut()) {
 
-                case SIGN_OUT_CODE:
+                case SIGN_OUT_CODE_GOOGLE:
 
-                    KLog.e("CODE------>", sharedPreferencesManager.getCheckSignOut() + " " + SIGN_OUT_CODE);
+                    KLog.e("CODE------>SIGN_OUT_CODE_GOOGLE", sharedPreferencesManager.getCheckSignOut());
+                    KLog.e("SIGN_OUT_CODE_GOOGLE--->mGoogleApiClient", mGoogleApiClient);
+
+                    fireBaseGoogleSigInPresenter.signOut(mGoogleApiClient);
+                    break;
+
+                case SIGN_OUT_CODE_FACEBOOK:
+
+                    KLog.e("CODE------>", sharedPreferencesManager.getCheckSignOut() + " " + SIGN_OUT_CODE_FACEBOOK);
 
                     fireBaseFacebookPresenter.facebookSignOut();
                     break;
 
-                case SIGN_OUT_CODE_GOOGLE:
-
-                    KLog.e("CODE------>SIGN_OUT_CODE_GOOGLE", sharedPreferencesManager.getCheckSignOut());
-                    KLog.e("MMMMMMMMM2", mGoogleApiClient);
-
-                    fireBaseGoogleSigInPresenter.signOut(mGoogleApiClient);
-
-                    break;
                 case SIGN_OUT_CODE_EMPTY:
                     KLog.e("CODE------>SIGN_OUT_CODE_EMPTY", sharedPreferencesManager.getCheckSignOut());
                     break;
@@ -147,12 +144,9 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
                 R.layout.welcome_slide1,
                 R.layout.welcome_slide2};
 
-        CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
-
-
         sliderPagerAdapter = new SliderPagerAdapter();
         mViewPageWelcome.setAdapter(sliderPagerAdapter);
-        indicator.setViewPager(mViewPageWelcome);
+        mIndicatorWelcome.setViewPager(mViewPageWelcome);
         mViewPageWelcome.addOnPageChangeListener(viewPagerPageChangeListener);
     }
 
@@ -181,25 +175,18 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
 
         switch (view.getId()) {
 
-            case R.id.btnSignEmpty:
+            case R.id.btnSignGoogle:
+
                 sharedPreferencesManager.setFirstTimeLaunch(false);
-                Intent welcomeintent = new Intent(WelcomeActivity.this, TasksActivity.class);
-                welcomeintent.putExtra(EXTRA_FIREBASEUSERLABEL, 2);
-                startActivity(welcomeintent);
-
-                sharedPreferencesManager.setFirstUser(getResources().getString(R.string.empty_just_to_do_user)
-                        , getResources().getString(R.string.empty_user), "");
-
-                sharedPreferencesManager.setCheckSignOut(SIGN_OUT_CODE_EMPTY);
-                sharedPreferencesManager.setPrefUserId("empty");
-                finish();
-                //launchHomeScreen();
+                sharedPreferencesManager.setCheckSignOut(SIGN_OUT_CODE_GOOGLE);
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                fireBaseGoogleSigInPresenter.signIn(signInIntent, mAuth, mGoogleApiClient);
                 break;
 
             case R.id.btnSignFacebook:
 
                 sharedPreferencesManager.setFirstTimeLaunch(false);
-                sharedPreferencesManager.setCheckSignOut(SIGN_OUT_CODE);
+                sharedPreferencesManager.setCheckSignOut(SIGN_OUT_CODE_FACEBOOK);
                 LoginManager.getInstance().logInWithReadPermissions(WelcomeActivity.this,
                         Arrays.asList("email", "public_profile"));
                 LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -221,12 +208,18 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
                 });
                 break;
 
-            case R.id.btnSignGoogle:
-
+            case R.id.btnSignEmpty:
                 sharedPreferencesManager.setFirstTimeLaunch(false);
-                sharedPreferencesManager.setCheckSignOut(SIGN_OUT_CODE_GOOGLE);
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                fireBaseGoogleSigInPresenter.signIn(signInIntent, mAuth, mGoogleApiClient);
+                Intent welcomeintent = new Intent(WelcomeActivity.this, TasksActivity.class);
+                welcomeintent.putExtra(EXTRA_FIREBASEUSERLABEL, EXTRA_FIREBASEUSERLABELTWOO);
+                startActivity(welcomeintent);
+
+                sharedPreferencesManager.setFirstUser(getResources().getString(R.string.empty_just_to_do_user)
+                        , getResources().getString(R.string.empty_user));
+
+                sharedPreferencesManager.setCheckSignOut(SIGN_OUT_CODE_EMPTY);
+                sharedPreferencesManager.setPrefUserId("empty");
+                finish();
                 break;
         }
     }
@@ -275,15 +268,11 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
     public void updateUser(FirebaseUser user) {
 
         String mUserIdNameTextView = "";
-        String mUserIdEmailTextView = "";
         String mUserIdPicTextView = "";
         String mUserIdTextView = "";
 
-//        KLog.e("useruser", user.getDisplayName());
-
         if (user != null) {
             mUserIdNameTextView = user.getDisplayName();
-            mUserIdEmailTextView = user.getEmail();
             mUserIdPicTextView = String.valueOf(user.getPhotoUrl());
             mUserIdTextView = user.getUid();
 
@@ -292,37 +281,19 @@ public class WelcomeActivity extends AppCompatActivity implements FacebookView, 
 
             Intent intent = new Intent(this, TasksActivity.class);
             intent.putExtra(EXTRA_FIREBASEUSERNAME, mUserIdNameTextView);
-            intent.putExtra(EXTRA_FIREBASEUSEREMAIL, mUserIdEmailTextView);
             intent.putExtra(EXTRA_FIREBASEUSERPIC, mUserIdPicTextView);
-            intent.putExtra(EXTRA_FIREBASEUSERLABEL, 1);
+            intent.putExtra(EXTRA_FIREBASEUSERLABEL, EXTRA_FIREBASEUSERLABELONE);
             startActivity(intent);
             finish();
 
             //prefUser
-            sharedPreferencesManager.setFirstUser(mUserIdNameTextView, mUserIdEmailTextView, mUserIdPicTextView);
-            KLog.e("refManager.setFirstUser", mUserIdEmailTextView);
-
-            //launchHomeScreen();
-
+            sharedPreferencesManager.setFirstUser(mUserIdNameTextView, mUserIdPicTextView);
         }
-
-        /*KLog.d("Recordered in firebase");
-        Toast.makeText(this, "Email logged",
-                Toast.LENGTH_LONG).show();*/
     }
 
     @Override
     public void onBackPressed() {
-        /*new AlertDialog.Builder(this)
-                .setTitle("Really Exit?")
-                .setMessage("Are you sure you want to exit?")
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        WelcomeActivity.super.onBackPressed();
-                    }
-                }).create().show();*/
         finish();
     }
 

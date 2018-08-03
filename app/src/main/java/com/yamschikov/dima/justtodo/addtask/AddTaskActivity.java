@@ -3,9 +3,11 @@ package com.yamschikov.dima.justtodo.addtask;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -20,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -107,6 +110,7 @@ public class AddTaskActivity extends AppCompatActivity implements CustomDatePick
         inputTaskTitle.addTextChangedListener(new TaskWatcher(inputTaskTitle));
 
         sharedPreferencesManager.setCheckedCategory("");
+
     }
 
     public void menuCategory() {

@@ -5,6 +5,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -15,6 +17,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -30,9 +35,12 @@ import com.yamschikov.dima.justtodo.tasksactivity.adapters.RecyclerItemTouchHelp
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -57,7 +65,6 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
     View snackbarView;
 
     private JustTaskAdapter mJustTaskAdapter;
-
     List<JustToDoStructureTable> justToDoStructureTablesList;
 
     public static FragmentTaskHome newInstance() {
@@ -70,6 +77,7 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
 
         View view = inflater.inflate(R.layout.fragment_task_home, container, false);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
         BaseApplication.getAppComponent().inject(this);
 
@@ -99,6 +107,7 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
                     mTaskListRv.setVisibility(View.VISIBLE);
                     mEmptyView.setVisibility(View.GONE);
                     mEmptyPic.setVisibility(View.GONE);
+
                 } else {
 
                     mTaskListRv.setVisibility(View.GONE);
@@ -167,5 +176,45 @@ public class FragmentTaskHome extends Fragment implements RecyclerItemTouchHelpe
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.show();
         }
+    }
+
+    //menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.tasks, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_delete_all:
+
+                if (justToDoStructureTablesList.size() != 0) {
+
+                    mJustTaskAdapter.removeAllItem();
+                    mTaskHomeViewModel.deleteTaskByCategory(getResources().getString(R.string.home_task_fragment)
+                            , sharedPreferencesManager.getPrefUserId());
+
+                } else {
+
+                    mTaskListRv.setVisibility(View.GONE);
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mEmptyPic.setVisibility(View.VISIBLE);
+
+                    snackbar = Snackbar.make(mTaskListRv, getResources().getString(R.string.snackbartaskisempty),
+                            Snackbar.LENGTH_SHORT);
+                    snackbarView = snackbar.getView();
+                    TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.RED);
+                    snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    snackbar.show();
+                }
+
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

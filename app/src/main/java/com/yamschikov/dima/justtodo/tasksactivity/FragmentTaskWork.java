@@ -15,6 +15,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -70,6 +73,7 @@ public class FragmentTaskWork extends Fragment implements RecyclerItemTouchHelpe
 
         View view = inflater.inflate(R.layout.fragment_task_work_fragment, container, false);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
         BaseApplication.getAppComponent().inject(this);
 
@@ -170,5 +174,45 @@ public class FragmentTaskWork extends Fragment implements RecyclerItemTouchHelpe
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.show();
         }
+    }
+
+    //menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.tasks, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_delete_all:
+
+                if (justToDoStructureTablesList.size() != 0) {
+
+                    mJustTaskAdapter.removeAllItem();
+                    mTaskWorkViewModel.deleteTaskByCategory(getResources().getString(R.string.work_task_fragment)
+                            , sharedPreferencesManager.getPrefUserId());
+
+                } else {
+
+                    mTaskListRv.setVisibility(View.GONE);
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mEmptyPic.setVisibility(View.VISIBLE);
+
+                    snackbar = Snackbar.make(mTaskListRv, getResources().getString(R.string.snackbartaskisempty),
+                            Snackbar.LENGTH_SHORT);
+                    snackbarView = snackbar.getView();
+                    TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.RED);
+                    snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    snackbar.show();
+                }
+
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

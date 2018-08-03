@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,19 +11,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
 import com.socks.library.KLog;
 import com.yamschikov.dima.justtodo.BaseApplication;
 import com.yamschikov.dima.justtodo.R;
 import com.yamschikov.dima.justtodo.addtask.AddTaskActivity;
 import com.yamschikov.dima.justtodo.di.SharedPreferencesManager;
-import com.yamschikov.dima.justtodo.prefsafe.PrefManager;
 
 import javax.inject.Inject;
 
@@ -38,29 +32,29 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TasksActivity extends AppCompatActivity {
 
-    TextView mIdUserName;
-    TextView mIdUserEmail;
-    CircleImageView mIdUserPic;
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
 
     @BindView(R.id.toolbarTask) Toolbar mToolbarTask;
     @BindView(R.id.fabTask) FloatingActionButton mFabTask;
     @BindView(R.id.drawerTask) DrawerLayout mDrawerTask;
     @BindView(R.id.navViewTask) NavigationView mNavViewTask;
 
-    View headerView;
-    @Inject
-    SharedPreferencesManager sharedPreferencesManager;
-
-    NavController navController;
-
     public static final String EXTRA_FIREBASEUSERNAME = "firebaseusername";
-    public static final String EXTRA_FIREBASEUSEREMAIL = "firebaseuseremail";
     public static final String EXTRA_FIREBASEUSERPIC = "firebaseuserpic";
     public static final String EXTRA_FIREBASEUSERLABEL = "firebaseuserlabel";
 
-    public static final int SIGN_OUT_CODE = 1001;
     public static final int SIGN_OUT_CODE_EMPTY = 1000;
+    public static final int SIGN_OUT_CODE_FACEBOOK = 1001;
     public static final int SIGN_OUT_CODE_GOOGLE = 1002;
+
+    public static final int EXTRA_FIREBASEUSERLABELONE = 1;
+    public static final int EXTRA_FIREBASEUSERLABELTWOO = 2;
+
+    TextView mIdUserName;
+    CircleImageView mIdUserPic;
+    NavController navController;
+    View headerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,10 +81,7 @@ public class TasksActivity extends AppCompatActivity {
 
         headerView = mNavViewTask.getHeaderView(0);
         mIdUserName = (TextView) headerView.findViewById(R.id.idUserName);
-        mIdUserEmail = (TextView) headerView.findViewById(R.id.idUserEmail);
         mIdUserPic = (CircleImageView) headerView.findViewById(R.id.idUserPic);
-
-        //prefManager = new PrefManager(this);
 
         userInfo();
 
@@ -129,21 +120,6 @@ public class TasksActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.tasks, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return NavigationUI.onNavDestinationSelected(item,
-                Navigation.findNavController(this, R.id.my_nav_host_fragment)) ||
-                super.onOptionsItemSelected(item);
-    }
-
     private void userInfo() {
 
         Intent intent = getIntent();
@@ -151,23 +127,20 @@ public class TasksActivity extends AppCompatActivity {
         if (bd != null) {
             int intlabel = bd.getInt(EXTRA_FIREBASEUSERLABEL);
 
-            if (intlabel == 1) {
+            if (intlabel == EXTRA_FIREBASEUSERLABELONE) {
 
                 KLog.e("IntLanel", intlabel);
                 String getName = (String) bd.get(EXTRA_FIREBASEUSERNAME);
                 mIdUserName.setText(getName);
-                String getEmail = (String) bd.get(EXTRA_FIREBASEUSEREMAIL);
-                mIdUserEmail.setText(getEmail);
                 String getPic = (String) bd.get(EXTRA_FIREBASEUSERPIC);
                 Glide.with(this)
                         .load(getPic)
                         .into(mIdUserPic);
             }
 
-            if (intlabel == 2) {
-
+            if (intlabel == EXTRA_FIREBASEUSERLABELTWOO) {
+                KLog.e("IntLanel", intlabel);
                 mIdUserName.setText(getResources().getString(R.string.empty_just_to_do_user));
-                mIdUserEmail.setText(getResources().getString(R.string.empty_user));
                 Glide.with(this)
                         .load(getResources().getDrawable(R.drawable.book))
                         .into(mIdUserPic);
@@ -177,7 +150,6 @@ public class TasksActivity extends AppCompatActivity {
 
                     KLog.e("NO Null_SIGN_OUT_CODE_EMPTY");
                     mIdUserName.setText(sharedPreferencesManager.getFirstUserName());
-                    mIdUserEmail.setText(sharedPreferencesManager.getFirstUserEmail());
                     Glide.with(this)
                             .load(getResources().getDrawable(R.drawable.book))
                             .into(mIdUserPic);
@@ -185,7 +157,6 @@ public class TasksActivity extends AppCompatActivity {
 
                     KLog.e("NO Null");
                     mIdUserName.setText(sharedPreferencesManager.getFirstUserName());
-                    mIdUserEmail.setText(sharedPreferencesManager.getFirstUserEmail());
                     Glide.with(this)
                             .load(sharedPreferencesManager.getFirstUserPic())
                             .into(mIdUserPic);

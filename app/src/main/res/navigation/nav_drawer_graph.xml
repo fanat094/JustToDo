@@ -42,4 +42,9 @@
         android:id="@+id/fragmentTaskAllTasks"
         android:name="com.yamschikov.dima.justtodo.tasksactivity.FragmentTaskAllTasks"
         android:label="@string/alltasks_task_fragment" />
+    <activity
+        android:id="@+id/activityAboutAppActivity"
+        android:name="com.yamschikov.dima.justtodo.AboutAppActivity"
+        android:label="@string/aboutapp_activity"
+        tools:layout="@layout/activity_about_app" />
 </navigation>

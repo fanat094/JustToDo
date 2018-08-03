@@ -31,11 +31,4 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/colorBlack" />
 
-    <TextView
-        android:id="@+id/idUserEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="yamschikovdima@gmail.com"
-        android:textColor="@color/colorBlack" />
-
 </LinearLayout>

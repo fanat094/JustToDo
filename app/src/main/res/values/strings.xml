@@ -44,6 +44,7 @@
     <string name="work_task_fragment">Work</string>
     <string name="personal_task_fragment">Personal</string>
     <string name="store_task_fragment">Store</string>
+    <string name="aboutapp_activity">About App</string>
 
     <!-- Category Items Alert -->
     <string-array name="category_items">
@@ -62,5 +63,18 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="empty_just_to_do_user">Just To Do</string>
     <string name="empty_user">Just User</string>
+
+    <string name="just_about_app">About</string>
+    <string name="just_about_app_text">You can to save your tasks and access them anywhere.
+        Organize and prioritize all your tasks and projects so you can live more and stress less</string>
+    <string name="just_version">Version</string>
+    <string name="just_version_text">1.0</string>
+        <string name="just_developer">Developer</string>
+    <string name="just_developer_text">Dima Yamschikov</string>
+    <string name="just_feedback">Feedback</string>
+    <string name="just_feedback_text">yamschikovdima@gmail.com</string>
+    <string name="email_to_feedback">yamschikovdima@gmail.com</string>
+    <string name="feedback_title">Your feedback:</string>
+    <string name="feedbackGradeUrl">https://play.google.com/store/apps</string>
 
 </resources>

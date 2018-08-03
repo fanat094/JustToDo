@@ -64,7 +64,12 @@ public class JustTaskAdapter extends RecyclerView.Adapter<JustTaskAdapter.JustTa
         notifyDataSetChanged();
     }
 
-    public class JustTaskHolder extends RecyclerView.ViewHolder {
+    public void removeAllItem() {
+        justToDoStructureTablesList.clear();
+        notifyDataSetChanged();
+    }
+
+    public static class JustTaskHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.justTask)
         TextView mJustTask;

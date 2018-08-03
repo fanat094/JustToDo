@@ -37,9 +37,8 @@ public class SharedPreferencesManager {
     }
 
     //prefuser
-    public void setFirstUser(String prefUserName, String prefUserEmail, String prefUserPic) {
+    public void setFirstUser(String prefUserName, String prefUserPic) {
         mSharedPreferences.edit().putString(PREF_USER_NAME, prefUserName).apply();
-        mSharedPreferences.edit().putString(PREF_USER_EMAIL, prefUserEmail).apply();
         mSharedPreferences.edit().putString(PREF_USER_PIC, prefUserPic).apply();
     }
 

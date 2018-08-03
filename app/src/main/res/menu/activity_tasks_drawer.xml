@@ -34,9 +34,9 @@
             android:title="Store" />
 
         <item
-            android:id="@+id/nav_send"
+            android:id="@+id/activityAboutAppActivity"
             android:icon="@drawable/ic_menu_send"
-            android:title="Send" />
+            android:title="About App" />
 
         <item
             android:id="@+id/navigationSignOut"
